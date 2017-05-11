@@ -12,7 +12,7 @@
 
 .scrollable-menu {
     height: auto;
-    max-height: 250px;
+    max-height: 300px;
     overflow-x: hidden;
 }
 
@@ -137,11 +137,11 @@ function openQrScan(){
 	</div>
 	
 	<div class="btn-group" role="group" aria-label="...">
-	  <button type="button" class="btn btn-default" onclick="openQrScan();">QR 확인</button>
-	  <button type="button" class="btn btn-warning">번호 전송</button>
+	  <button type="button" class="btn btn-default" onclick="openQrScan();" style="height: 49px;">QR 확인</button>
+	  <button type="button" class="btn btn-warning">번호 전송 <img src="kakaolink_btn_small.png" style="vertical-align: middle;"/></button>
 	
 	  <div class="btn-group" role="group">
-	    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" style="height: 49px;" aria-expanded="false">
 	      다른회차
 	      <span class="caret"></span>
 	    </button>
@@ -167,10 +167,6 @@ function openQrScan(){
 		<br/>
 		<div>
 			당첨자  : <span id="winnerCnt"></span> 명
-		</div>
-		<br/>
-		<div>
-			<a class="btn btn-lg btn-default" href="#">번호 전송 <img src="kakaolink_btn_small.png" style="vertical-align: middle;"/></a>
 		</div>
 	</div>
 </div>
