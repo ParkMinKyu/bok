@@ -5,13 +5,14 @@
 <title>로또 번호 및 당첨금 확인 화면</title>
 <script type="text/javascript" src="jquery-1.8.3.min.js"></script>
 <script type="text/javascript">
-$(function(){
-	
-})
+function setWinner(winData){
+	$('#winnerArea').text(winData);
+}
 </script>
 </head>
 <body>
 <h1>제 781회 로또 당첨 번호</h1>
+<div id="winnerArea"></div>
 <table>
 <tr>
 	<th>
