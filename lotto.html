@@ -29,6 +29,7 @@ function setWinnerInfo(winData){
 	$('#winnerMnt').text(String(winner.firstWinamnt).replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
 	$('#totMnt').text(String(winner.totSellamnt).replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
 	$('#winnerCnt').text(winner.firstPrzwnerCo);
+	$('#lottoTitle').text("제 " + winner.drwNo + " 회 로또 당첨 번호");
 }
 
 function getWinnerInfo(drwNo){
@@ -44,7 +45,7 @@ function createDrwNo(drwNo){
 </head>
 <body>
 <div class="container">
-	<h3>제 781회 로또 당첨 번호</h3>
+	<h3 id="lottoTitle"></h3>
 	<div class="btn-group" role="group" aria-label="...">
 	  <button type="button" class="btn btn-default">QR 확인</button>
 	  <button type="button" class="btn btn-warning">번호 전송</button>
