@@ -15,8 +15,12 @@
 <script type="text/javascript" src="jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/bok/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+function firstInit(winData){
+	let winner = JSON.parse(winData);
+	setWinner(winData);
+	createDrwNo(winner.drwNo)
+}
 function setWinner(winData){
-	//{"bnusNo":3,"firstWinamnt":2711105063,"totSellamnt":68915001000,"returnValue":"success","drwtNo3":19,"drwtNo2":17,"drwtNo1":2,"drwtNo6":41,"drwtNo5":37,"drwtNo4":24,"drwNoDate":"2017-05-06","drwNo":753,"firstPrzwnerCo":6}
 	let winner = JSON.parse(winData);
 	let winNum = winner.drwtNo1 + ' ' + winner.drwtNo2 + ' ' + winner.drwtNo3 + ' ' + winner.drwtNo4 + ' ' + winner.drwtNo5 + ' ' + winner.drwtNo6 + ' + ' + winner.bnusNo;
 	let winDate = winner.drwNoDate;
@@ -25,11 +29,10 @@ function setWinner(winData){
 	$('#winnerMnt').text(String(winner.firstWinamnt).replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
 	$('#totMnt').text(String(winner.totSellamnt).replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
 	$('#winnerCnt').text(winner.firstPrzwnerCo);
-	createDrwNo(winner.drwNo)
 }
 
 function getWinnerInfo(drwNo){
-	alert(drwNo);
+	javascriptService.getWinnerInfo(drwNo);
 }
 
 function createDrwNo(drwNo){
