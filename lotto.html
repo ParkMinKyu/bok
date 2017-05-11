@@ -7,7 +7,7 @@
 <script type="text/javascript">
 function setWinner(winData){
 	let winner = JSON.parse(winData);
-	let winNum = '' + winner.drwtNo1 +winner.drwtNo2 +winner.drwtNo3 +winner.drwtNo4 +winner.drwtNo5 +winner.drwtNo6; 
+	let winNum = winner.drwtNo1 + ' + ' + winner.drwtNo2 + ' + ' + winner.drwtNo3 + ' + ' + winner.drwtNo4 + ' + ' + winner.drwtNo5 + ' + ' + winner.drwtNo6;
 	$('#winnerNumber').text(winNum);
 	$('#winnerMnt').text(winner.firstWinamnt);
 }
