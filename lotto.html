@@ -128,7 +128,7 @@ function openQrScan(){
 	javascriptService.openQrScan();
 }
 
-function CallKaKaoTalk(matchNum, year, realNum){
+function CallKaKaoTalk(){
 	var lottoTitle = $('#lottoTitle').val();
 	var matchYear = $('#winnerDate').html().replace(/<br>/g,"\n");
 	var realNums ="";
@@ -150,7 +150,7 @@ function CallKaKaoTalk(matchNum, year, realNum){
 	
 	<div class="btn-group" role="group" aria-label="...">
 	  <button type="button" class="btn btn-default" onclick="openQrScan();" style="height: 49px;">QR 확인</button>
-	  <button type="button" class="btn btn-warning">번호 전송 <img src="kakaolink_btn_small.png" style="vertical-align: middle;"/></button>
+	  <button type="button" class="btn btn-warning" onclick="CallKaKaoTalk();">번호 전송 <img src="kakaolink_btn_small.png" style="vertical-align: middle;"/></button>
 	
 	  <div class="btn-group" role="group">
 	    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" style="height: 49px;" aria-expanded="false">
