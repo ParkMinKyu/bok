@@ -101,15 +101,15 @@ function setWinnerInfo(winData){
 function createBall(ballNum){
 	let ball = "";
 	if(ballNum <= 10){
-		ball = "<div class='redball'>"+ballNum+"</div>";
+		ball = "<div class='redball' data-num='"+ballNum+"'>"+ballNum+"</div>";
 	}else if(ballNum <= 20){
-		ball = "<div class='paranball'>"+ballNum+"</div>";
+		ball = "<div class='paranball' data-num='"+ballNum+"'>"+ballNum+"</div>";
 	}else if(ballNum <= 30){
-		ball = "<div class='purpleball'>"+ballNum+"</div>";
+		ball = "<div class='purpleball' data-num='"+ballNum+"'>"+ballNum+"</div>";
 	}else if(ballNum <= 40){
-		ball = "<div class='wienball'>"+ballNum+"</div>";
+		ball = "<div class='wienball' data-num='"+ballNum+"'>"+ballNum+"</div>";
 	}else{
-		ball = "<div class='yellowball'>"+ballNum+"</div>";
+		ball = "<div class='yellowball' data-num='"+ballNum+"'>"+ballNum+"</div>";
 	}
 	return ball;
 }
@@ -126,6 +126,19 @@ function createDrwNo(drwNo){
 
 function openQrScan(){
 	javascriptService.openQrScan();
+}
+
+function CallKaKaoTalk(matchNum, year, realNum){
+	var lottoTitle = $('#lottoTitle').val();
+	var matchYear = $('#gameyear').html().replace(/<br>/g,"\n");
+	var realNums ="";
+	for(var i = 0 ; i <= 5 ; i ++){
+	realNums += $($('#winnerNumber div')[i]).text();
+	if(i < 5) realNums += ", ";
+	}
+	
+	CallAndroid.CallKaKaoTalk(matchNum,matchYear,realNums);
+	javascriptService.CallKaKaoTalk(lottoTitle, matchYear, realNum);
 }
 </script>
 </head>
