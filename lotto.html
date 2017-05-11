@@ -9,12 +9,15 @@
 <script type="text/javascript" src="/bok/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 function setWinner(winData){
+	//{"bnusNo":3,"firstWinamnt":2711105063,"totSellamnt":68915001000,"returnValue":"success","drwtNo3":19,"drwtNo2":17,"drwtNo1":2,"drwtNo6":41,"drwtNo5":37,"drwtNo4":24,"drwNoDate":"2017-05-06","drwNo":753,"firstPrzwnerCo":6}
 	let winner = JSON.parse(winData);
 	let winNum = winner.drwtNo1 + ' ' + winner.drwtNo2 + ' ' + winner.drwtNo3 + ' ' + winner.drwtNo4 + ' ' + winner.drwtNo5 + ' ' + winner.drwtNo6 + ' + ' + winner.bnusNo;
 	let winDate = winner.drwNoDate;
 	$('#winnerDate').text(winDate);
 	$('#winnerNumber').text(winNum);
-	$('#winnerMnt').text(String(winner.firstWinamnt).replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,') + " 원");
+	$('#winnerMnt').text(String(winner.firstWinamnt).replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+	$('#totMnt').text(String(winner.totSellamnt).replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+	$('#winnerCnt').text(winner.firstPrzwnerCo);
 }
 </script>
 </head>
@@ -22,9 +25,21 @@ function setWinner(winData){
 <div class="container">
 <h3>제 781회 로또 당첨 번호</h3>
 <div id="winnerArea">
-	<div id="winnerDate"></div>
-	<div id="winnerNumber"></div>
-	<div id="winnerMnt"></div>
+	<div>
+		추첨일 : <span id="winnerDate"></span>
+	</div>
+	<div>
+		총 판매금 : <span id="totMnt"></span> 원		
+	</div>
+	<div>
+		당첨 번호 : <span id="winnerNumber"></span>
+	</div>
+	<div>
+		당첨금 : <span id="winnerMnt"></span> 원
+	</div>
+	<div>
+		당첨자  : <span id="winnerCnt"></span> 명
+	</div>
 </div>
 <div id="qrBtnArea">
 	<button class="btn btn-default">QR CODE 확인</button>
