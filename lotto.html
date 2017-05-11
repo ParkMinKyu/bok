@@ -3,49 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <title>로또 번호 및 당첨금 확인 화면</title>
+<link rel="stylesheet" href="/bok/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="/bok/bootstrap/css/bootstrap-theme.min.css"/>
 <script type="text/javascript" src="jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="/bok/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 function setWinner(winData){
 	let winner = JSON.parse(winData);
-	let winNum = winner.drwtNo1 + ' + ' + winner.drwtNo2 + ' + ' + winner.drwtNo3 + ' + ' + winner.drwtNo4 + ' + ' + winner.drwtNo5 + ' + ' + winner.drwtNo6;
+	let winNum = winner.drwtNo1 + ' ' + winner.drwtNo2 + ' ' + winner.drwtNo3 + ' ' + winner.drwtNo4 + ' ' + winner.drwtNo5 + ' ' + winner.drwtNo6 + ' + ' + winner.bnusNo;
+	let winDate = winner.drwNoDate;
+	$('#winnerDate').text(winDate);
 	$('#winnerNumber').text(winNum);
-	$('#winnerMnt').text(winner.firstWinamnt);
+	$('#winnerMnt').text(winner.firstWinamnt + " 원");
 }
 </script>
 </head>
 <body>
+<div class="container">
 <h1>제 781회 로또 당첨 번호</h1>
-<h3>2017-01-12</h3>
 <div id="winnerArea">
 	<h3>1등</h3>
-	<div id="winnerNumber">1,2,3,4,5</div>
-	<div id="winnerMnt">12,312,321 원</div>
-</div>
-<div id="2stArea">
-	<h3>2등</h3>
-	<div id="2stNumber"></div>
-	<div id="2stMnt"></div>	
-</div>
-<div id="3stArea">
-	<h3>3등</h3>
-	<div id="3stNumber"></div>
-	<div id="3stMnt"></div>
-</div>
-<div id="4stArea">
-	<h3>4등</h3>
-	<div id="4stNumber"></div>
-	<div id="4stMnt"></div>
-</div>
-<div id="5stArea">
-	<h3>5등</h3>
-	<div id="5stNumber"></div>
-	<div id="5stMnt"></div>
+	<div id="winnerDate"></div>
+	<div id="winnerNumber"></div>
+	<div id="winnerMnt"></div>
 </div>
 <div id="qrBtnArea">
-	<button>QR CODE 확인</button>
+	<button class="btn btn-default">QR CODE 확인</button>
 </div>
 <div id="kakaoBtnArea">
-	<button>카톡으로 번호 전송</button>
+	<button class="btn btn-primary">카톡으로 번호 전송</button>
+</div>
 </div>
 </body>
 </html>
