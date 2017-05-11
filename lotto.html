@@ -5,6 +5,13 @@
 <title>로또 번호 및 당첨금 확인 화면</title>
 <link rel="stylesheet" href="/bok/bootstrap/css/bootstrap.min.css"/>
 <link rel="stylesheet" href="/bok/bootstrap/css/bootstrap-theme.min.css"/>
+<style type="text/css">
+.scrollable-menu {
+    height: auto;
+    max-height: 250px;
+    overflow-x: hidden;
+}
+</style>
 <script type="text/javascript" src="jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/bok/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
@@ -18,35 +25,54 @@ function setWinner(winData){
 	$('#winnerMnt').text(String(winner.firstWinamnt).replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
 	$('#totMnt').text(String(winner.totSellamnt).replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
 	$('#winnerCnt').text(winner.firstPrzwnerCo);
+	createDrwNo(winner.drwNo)
+}
+
+function getWinnerInfo(drwNo){
+	alert(drwNo);
+}
+
+function createDrwNo(drwNo){
+	for(var i = drwNo ; i > 0 ; i --){
+		$('#drwNo').append('<li><a href="javascript:getWinnerInfo('+i+')">' + i + " 회" + '</a></li>');
+	}
 }
 </script>
 </head>
 <body>
 <div class="container">
-<h3>제 781회 로또 당첨 번호</h3>
-<div id="winnerArea">
-	<div>
-		추첨일 : <span id="winnerDate"></span>
+	<h3>제 781회 로또 당첨 번호</h3>
+	<div class="btn-group" role="group" aria-label="...">
+	  <button type="button" class="btn btn-default">QR 확인</button>
+	  <button type="button" class="btn btn-warning">번호 전송</button>
+	
+	  <div class="btn-group" role="group">
+	    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+	      다른회차
+	      <span class="caret"></span>
+	    </button>
+	    <ul class="dropdown-menu scrollable-menu" id="drwNo">
+	      
+	    </ul>
+	  </div>
 	</div>
-	<div>
-		총 판매금 : <span id="totMnt"></span> 원		
+	<div id="winnerArea">
+		<div>
+			추첨일 : <span id="winnerDate"></span>
+		</div>
+		<div>
+			총 판매금 : <span id="totMnt"></span> 원		
+		</div>
+		<div>
+			당첨 번호 : <span id="winnerNumber"></span>
+		</div>
+		<div>
+			당첨금 : <span id="winnerMnt"></span> 원
+		</div>
+		<div>
+			당첨자  : <span id="winnerCnt"></span> 명
+		</div>
 	</div>
-	<div>
-		당첨 번호 : <span id="winnerNumber"></span>
-	</div>
-	<div>
-		당첨금 : <span id="winnerMnt"></span> 원
-	</div>
-	<div>
-		당첨자  : <span id="winnerCnt"></span> 명
-	</div>
-</div>
-<div id="qrBtnArea">
-	<button class="btn btn-default">QR CODE 확인</button>
-</div>
-<div id="kakaoBtnArea">
-	<button class="btn btn-primary">카톡으로 번호 전송</button>
-</div>
 </div>
 </body>
 </html>
