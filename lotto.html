@@ -7,17 +7,40 @@
 <script type="text/javascript">
 function setWinner(winData){
 	let winner = JSON.parse(winData);
-	$('#winnerArea').text(winner.firstWinamnt);
+	let winNum = '' + winner.drwtNo1 +winner.drwtNo2 +winner.drwtNo3 +winner.drwtNo4 +winner.drwtNo5 +winner.drwtNo6; 
+	$('#winnerNumber').text(winNum);
+	$('#winnerMnt').text(winner.firstWinamnt);
 }
 </script>
 </head>
 <body>
 <h1>제 781회 로또 당첨 번호</h1>
-<div id="winnerArea"></div>
-<div id="2stArea"></div>
-<div id="3stArea"></div>
-<div id="4stArea"></div>
-<div id="5stArea"></div>
+<h3>2017-01-12</h3>
+<div id="winnerArea">
+	<h3>1등</h3>
+	<div id="winnerNumber">1,2,3,4,5</div>
+	<div id="winnerMnt">12,312,321 원</div>
+</div>
+<div id="2stArea">
+	<h3>2등</h3>
+	<div id="2stNumber"></div>
+	<div id="2stMnt"></div>	
+</div>
+<div id="3stArea">
+	<h3>3등</h3>
+	<div id="3stNumber"></div>
+	<div id="3stMnt"></div>
+</div>
+<div id="4stArea">
+	<h3>4등</h3>
+	<div id="4stNumber"></div>
+	<div id="4stMnt"></div>
+</div>
+<div id="5stArea">
+	<h3>5등</h3>
+	<div id="5stNumber"></div>
+	<div id="5stMnt"></div>
+</div>
 <div id="qrBtnArea">
 	<button>QR CODE 확인</button>
 </div>
