@@ -79,8 +79,6 @@ $(function(){
 			$('#historyArea td').each(function(){
 				historyArray.push($(this).clone());
 			});
-			
-			$('#manySort').click();
 		}
 	});
 	
@@ -219,6 +217,7 @@ function CallKaKaoTalk(){
 	
 	<h3>번호통계(보너스 미포함)</h3>
 	<div class="btn-group" role="group" aria-label="...">
+	  <button type="button" class="btn btn-default" id="numSort">번호순</button>
 	  <button type="button" class="btn btn-primary" id="manySort">많이나온순</button>
 	  <button type="button" class="btn btn-default" id="smallSort">적게나온순</button>
 	  <button type="button" class="btn btn-warning" id="lottoSimul">확률계산기</button>
