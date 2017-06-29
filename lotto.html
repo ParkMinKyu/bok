@@ -175,6 +175,8 @@ function CallKaKaoTalk(){
 	if(i < 5) realNums += ", ";
 	}
 	
+	realNums += " 보너스 : " + $($('#winnerNumber div')[7]).text();
+	
 	javascriptService.CallKaKaoTalk(lottoTitle, matchYear, realNums);
 }
 </script>
