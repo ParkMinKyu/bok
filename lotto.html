@@ -2,12 +2,13 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
 <title>로또 번호 및 당첨금 확인 화면</title>
 <link rel="stylesheet" href="/bok/bootstrap/css/bootstrap.min.css"/>
 <link rel="stylesheet" href="/bok/bootstrap/css/bootstrap-theme.min.css"/>
 <style type="text/css">
 *{
-	font-size : 15pt;
+	font-size : 12pt;
 }
 
 .scrollable-menu {
@@ -16,71 +17,106 @@
     overflow-x: hidden;
 }
 
-.redball{
+.history{
+    background-color: antiquewhite;
+}
+
+.ball{
+	width: 35px;
+	height: 35px;
+	text-align: center ;
+	color: #fff;
+	font-size: 16pt;
+	float: left;
+}
+
+.ball.red{
 	background: url(redball.png) no-repeat;
-	background-size: 40px;
-	width: 40px;
-	height: 40px;
-	text-align: center ;
-	color: #fff;
-	font-size: 18pt;
-	float: left;
+	background-size: 35px;
 }
 
-.yellowball{
+.ball.yellow{
 	background: url(yellowball.png) no-repeat;
-	background-size: 40px;
-	width: 40px;
-	height: 40px;
-	text-align: center ;
-	color: #fff;
-	font-size: 18pt;
-	float: left;
+	background-size: 35px;
 }
 
-.wienball{
+.ball.wien{
 	background: url(wienball.png) no-repeat;
-	background-size: 40px;
-	width: 40px;
-	height: 40px;
-	text-align: center ;
-	color: #fff;
-	font-size: 18pt;
-	float: left;
+	background-size: 35px;
 }
 
-.purpleball{
+.ball.purple{
 	background: url(purple.png) no-repeat;
-	background-size: 40px;
-	width: 40px;
-	height: 40px;
-	text-align: center ;
-	color: #fff;
-	font-size: 18pt;
-	float: left;
+	background-size: 35px;
 }
 
-.paranball{
+.ball.paran{
 	background: url(paranball.png) no-repeat;
-	background-size: 40px;
-	width: 40px;
-	height: 40px;
-	text-align: center ;
-	color: #fff;
-	font-size: 18pt;
-	float: left;
+	background-size: 35px;
 }
 </style>
 <script type="text/javascript" src="jquery-1.11.3.min.js"></script>
 <script type="text/javascript" src="/bok/bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
-function firstInit(winData){
-	let winner = JSON.parse(winData);
-	setWinnerInfo(winData);
-	createDrwNo(winner.drwNo)
+var data = {};
+var historyArray = new Array();
+$(function(){
+	$.ajax({
+		url : 'lottoHistory.json?d='+ new Date(),
+		success : function(res){
+			data = res;
+			createDrwNo(data.length);
+			setWinnerInfo(data[data.length-1]);
+			for(var i = 0 ; i < data.length ; i ++){
+				$('#history'+data[i].drwtNo1).text(parseInt($('#history'+data[i].drwtNo1).text())+1);
+				$('#history'+data[i].drwtNo2).text(parseInt($('#history'+data[i].drwtNo2).text())+1);
+				$('#history'+data[i].drwtNo3).text(parseInt($('#history'+data[i].drwtNo3).text())+1);
+				$('#history'+data[i].drwtNo4).text(parseInt($('#history'+data[i].drwtNo4).text())+1);
+				$('#history'+data[i].drwtNo5).text(parseInt($('#history'+data[i].drwtNo5).text())+1);
+				$('#history'+data[i].drwtNo6).text(parseInt($('#history'+data[i].drwtNo6).text())+1);
+			}
+			
+			$('#historyArea td').each(function(){
+				historyArray.push($(this).clone());
+			});
+			
+			$('#manySort').click();
+		}
+	});
+	
+	$('#manySort').click(function(){
+		historyArray.sort(function(a,b){
+			return parseInt(b.find('.history').text()) - parseInt(a.find('.history').text()); 
+		});
+		
+		setHistory()
+	});
+	
+	$('#smallSort').click(function(){
+		historyArray.sort(function(a,b){
+			return parseInt(a.find('.history').text())- parseInt(b.find('.history').text()); 
+		});
+		
+		setHistory()
+	});
+
+	$('#numSort').click(function(){
+		historyArray.sort(function(a,b){
+			return parseInt(a.find('.ball').text()) - parseInt(b.find('.ball').text()); 
+		});
+		
+		setHistory()
+	});
+});
+
+function setHistory(){
+	for(var i = 0 ; i < historyArray.length ; i ++){
+		$($('#historyArea td')[i]).html(historyArray[i].html());
+	}
 }
+
 function setWinnerInfo(winData){
-	let winner = JSON.parse(winData);
+	let winner = winData;
 	let winDate = winner.drwNoDate;
 	$('#winnerDate').text(winDate);
 	$('#winnerNumber').html('');
@@ -101,26 +137,26 @@ function setWinnerInfo(winData){
 function createBall(ballNum){
 	let ball = "";
 	if(ballNum <= 10){
-		ball = "<div class='redball' data-num='"+ballNum+"'>"+ballNum+"</div>";
+		ball = "<div class='ball red' data-num='"+ballNum+"'>"+ballNum+"</div>";
 	}else if(ballNum <= 20){
-		ball = "<div class='paranball' data-num='"+ballNum+"'>"+ballNum+"</div>";
+		ball = "<div class='ball paran' data-num='"+ballNum+"'>"+ballNum+"</div>";
 	}else if(ballNum <= 30){
-		ball = "<div class='purpleball' data-num='"+ballNum+"'>"+ballNum+"</div>";
+		ball = "<div class='ball purple' data-num='"+ballNum+"'>"+ballNum+"</div>";
 	}else if(ballNum <= 40){
-		ball = "<div class='wienball' data-num='"+ballNum+"'>"+ballNum+"</div>";
+		ball = "<div class='ball wien' data-num='"+ballNum+"'>"+ballNum+"</div>";
 	}else{
-		ball = "<div class='yellowball' data-num='"+ballNum+"'>"+ballNum+"</div>";
+		ball = "<div class='ball yellow' data-num='"+ballNum+"'>"+ballNum+"</div>";
 	}
 	return ball;
 }
 
 function getWinnerInfo(drwNo){
-	javascriptService.getWinnerInfo(drwNo);
+	setWinnerInfo(data[drwNo-1]);
 }
 
 function createDrwNo(drwNo){
 	for(var i = drwNo ; i > 0 ; i --){
-		$('#drwNo').append('<li><a href="javascript:getWinnerInfo('+i+')">' + i + " 회" + '</a></li>');
+		$('#drwNo').append('<li><a href="javascript:getWinnerInfo('+i+')">' + i + ' 회' + '</a></li>');
 	}
 }
 
@@ -147,7 +183,18 @@ function CallKaKaoTalk(){
 	<div>
 		추첨일 : <span id="winnerDate"></span>
 	</div>
-	
+	<div id="winnerArea">
+		<div>
+			총 판매금 : <span id="totMnt"></span>원		
+		</div>
+		<div>
+			<div id="winnerNumber"></div>
+		</div>
+		<div style="clear: both;"></div>
+		<div>
+			당첨금 : <span id="winnerMnt"></span>원 (<span id="winnerCnt"></span> 명)
+		</div>
+	</div>
 	<div class="btn-group" role="group" aria-label="...">
 	  <button type="button" class="btn btn-default" onclick="openQrScan();" style="height: 49px;">QR 확인</button>
 	  <button type="button" class="btn btn-warning" onclick="CallKaKaoTalk();">번호 전송 <img src="kakaolink_btn_small.png" style="vertical-align: middle;"/></button>
@@ -163,88 +210,74 @@ function CallKaKaoTalk(){
 	  </div>
 	</div>
 	
-	<div id="winnerArea">
-		<div>
-			당첨 번호 : <div id="winnerNumber"></div>
-		</div>
-		<div style="clear: both;"></div>
-		<br/>
-		<div>
-			총 판매금 : <span id="totMnt"></span> 원		
-		</div>
-		<br/>
-		<div>
-			당첨금 : <span id="winnerMnt"></span> 원
-		</div>
-		<br/>
-		<div>
-			당첨자  : <span id="winnerCnt"></span> 명
-		</div>
+	<h3>번호통계(보너스 미포함)</h3>
+	<div class="btn-group" role="group" aria-label="...">
+	  <button type="button" class="btn btn-primary" id="manySort">많이나온순</button>
+	  <button type="button" class="btn btn-default" id="smallSort">적게나온순</button>
 	</div>
-	<h3>지금까지나온횟수</h3>
 <table class="table" id="historyArea">
-	<tr>
-        <td><div class="redball">1</div><div id="history1">0</div> 회<td>
-        <td><div class="redball">2</div><div id="history2">0</div> 회<td>
-        <td><div class="redball">3</div><div id="history3">0</div> 회<td>
-        <td><div class="redball">4</div><div id="history4">0</div> 회<td>
-        <td><div class="redball">5</div><div id="history5">0</div> 회<td>
-	</tr>                                                          
-	<tr>                                                           
-        <td><div class="redball">6</div><div id="history6">0</div> 회<td>
-        <td><div class="redball">7</div><div id="history7">0</div> 회<td>
-        <td><div class="redball">8</div><div id="history8">0</div> 회<td>
-        <td><div class="redball">9</div><div id="history9">0</div> 회<td>
-        <td><div class="redball">10</div><div id="history10">0</div> 회<td>
+<tr>
+        <td><div class="ball red">1</div><div style="clear: both;"></div><div class="history" id="history1">0</div></td>
+        <td><div class="ball red">2</div><div style="clear: both;"></div><div class="history" id="history2">0</div></td>
+        <td><div class="ball red">3</div><div style="clear: both;"></div><div class="history" id="history3">0</div></td>
+        <td><div class="ball red">4</div><div style="clear: both;"></div><div class="history" id="history4">0</div></td>
+        <td><div class="ball red">5</div><div style="clear: both;"></div><div class="history" id="history5">0</div></td>
+	</tr>                                                                     
+	<tr>                                                                      
+        <td><div class="ball red">6</div><div style="clear: both;"></div><div class="history" id="history6">0</div></td>
+        <td><div class="ball red">7</div><div style="clear: both;"></div><div class="history" id="history7">0</div></td>
+        <td><div class="ball red">8</div><div style="clear: both;"></div><div class="history" id="history8">0</div></td>
+        <td><div class="ball red">9</div><div style="clear: both;"></div><div class="history" id="history9">0</div></td>
+        <td><div class="ball red">10</div><div style="clear: both;"></div><div class="history" id="history10">0</div></td>
 	</tr>
 	<tr>
-        <td><div class="paranball">11</div><div id="history11">0</div> 회<td>
-        <td><div class="paranball">12</div><div id="history12">0</div> 회<td>
-        <td><div class="paranball">13</div><div id="history13">0</div> 회<td>
-        <td><div class="paranball">14</div><div id="history14">0</div> 회<td>
-        <td><div class="paranball">15</div><div id="history15">0</div> 회<td>
-	</tr>                                                         
-	<tr>                                                          
-        <td><div class="paranball">16</div><div id="history16">0</div> 회<td>
-        <td><div class="paranball">17</div><div id="history17">0</div> 회<td>
-        <td><div class="paranball">18</div><div id="history18">0</div> 회<td>
-        <td><div class="paranball">19</div><div id="history19">0</div> 회<td>
-        <td><div class="paranball">20</div><div id="history20">0</div> 회<td>
+        <td><div class="ball paran">11</div><div style="clear: both;"></div><div class="history" id="history11">0</div></td>
+        <td><div class="ball paran">12</div><div style="clear: both;"></div><div class="history" id="history12">0</div></td>
+        <td><div class="ball paran">13</div><div style="clear: both;"></div><div class="history" id="history13">0</div></td>
+        <td><div class="ball paran">14</div><div style="clear: both;"></div><div class="history" id="history14">0</div></td>
+        <td><div class="ball paran">15</div><div style="clear: both;"></div><div class="history" id="history15">0</div></td>
+	</tr>                                                                        
+	<tr>                                                                         
+        <td><div class="ball paran">16</div><div style="clear: both;"></div><div class="history" id="history16">0</div></td>
+        <td><div class="ball paran">17</div><div style="clear: both;"></div><div class="history" id="history17">0</div></td>
+        <td><div class="ball paran">18</div><div style="clear: both;"></div><div class="history" id="history18">0</div></td>
+        <td><div class="ball paran">19</div><div style="clear: both;"></div><div class="history" id="history19">0</div></td>
+        <td><div class="ball paran">20</div><div style="clear: both;"></div><div class="history" id="history20">0</div></td>
 	</tr>        
 	<tr>         
-        <td><div class="purpleball">21</div><div id="history21">0</div> 회<td>
-        <td><div class="purpleball">22</div><div id="history22">0</div> 회<td>
-        <td><div class="purpleball">23</div><div id="history23">0</div> 회<td>
-        <td><div class="purpleball">24</div><div id="history24">0</div> 회<td>
-        <td><div class="purpleball">25</div><div id="history25">0</div> 회<td>
-	</tr>                                                         
-	<tr>                                                          
-        <td><div class="purpleball">26</div><div id="history26">0</div> 회<td>
-        <td><div class="purpleball">27</div><div id="history27">0</div> 회<td>
-        <td><div class="purpleball">28</div><div id="history28">0</div> 회<td>
-        <td><div class="purpleball">29</div><div id="history29">0</div> 회<td>
-        <td><div class="purpleball">30</div><div id="history30">0</div> 회<td>
+        <td><div class="ball purple">21</div><div style="clear: both;"></div><div class="history" id="history21">0</div></td>
+        <td><div class="ball purple">22</div><div style="clear: both;"></div><div class="history" id="history22">0</div></td>
+        <td><div class="ball purple">23</div><div style="clear: both;"></div><div class="history" id="history23">0</div></td>
+        <td><div class="ball purple">24</div><div style="clear: both;"></div><div class="history" id="history24">0</div></td>
+        <td><div class="ball purple">25</div><div style="clear: both;"></div><div class="history" id="history25">0</div></td>
+	</tr>                                                                         
+	<tr>                                                                          
+        <td><div class="ball purple">26</div><div style="clear: both;"></div><div class="history" id="history26">0</div></td>
+        <td><div class="ball purple">27</div><div style="clear: both;"></div><div class="history" id="history27">0</div></td>
+        <td><div class="ball purple">28</div><div style="clear: both;"></div><div class="history" id="history28">0</div></td>
+        <td><div class="ball purple">29</div><div style="clear: both;"></div><div class="history" id="history29">0</div></td>
+        <td><div class="ball purple">30</div><div style="clear: both;"></div><div class="history" id="history30">0</div></td>
 	</tr>        
 	<tr>         
-        <td><div class="wienball">31</div><div id="history31">0</div> 회<td>
-        <td><div class="wienball">32</div><div id="history32">0</div> 회<td>
-        <td><div class="wienball">33</div><div id="history33">0</div> 회<td>
-        <td><div class="wienball">34</div><div id="history34">0</div> 회<td>
-        <td><div class="wienball">35</div><div id="history35">0</div> 회<td>
-	</tr>                                                         
-	<tr>                                                          
-        <td><div class="wienball">36</div><div id="history36">0</div> 회<td>
-        <td><div class="wienball">37</div><div id="history37">0</div> 회<td>
-        <td><div class="wienball">38</div><div id="history38">0</div> 회<td>
-        <td><div class="wienball">39</div><div id="history39">0</div> 회<td>
-        <td><div class="wienball">40</div><div id="history40">0</div> 회<td>
+        <td><div class="ball wien">31</div><div style="clear: both;"></div><div class="history" id="history31">0</div></td>
+        <td><div class="ball wien">32</div><div style="clear: both;"></div><div class="history" id="history32">0</div></td>
+        <td><div class="ball wien">33</div><div style="clear: both;"></div><div class="history" id="history33">0</div></td>
+        <td><div class="ball wien">34</div><div style="clear: both;"></div><div class="history" id="history34">0</div></td>
+        <td><div class="ball wien">35</div><div style="clear: both;"></div><div class="history" id="history35">0</div></td>
+	</tr>                                                                       
+	<tr>                                                                        
+        <td><div class="ball wien">36</div><div style="clear: both;"></div><div class="history" id="history36">0</div></td>
+        <td><div class="ball wien">37</div><div style="clear: both;"></div><div class="history" id="history37">0</div></td>
+        <td><div class="ball wien">38</div><div style="clear: both;"></div><div class="history" id="history38">0</div></td>
+        <td><div class="ball wien">39</div><div style="clear: both;"></div><div class="history" id="history39">0</div></td>
+        <td><div class="ball wien">40</div><div style="clear: both;"></div><div class="history" id="history40">0</div></td>
 	</tr>        
 	<tr>         
-        <td><div class="yellowball">41</div><div id="history41">0</div> 회<td>
-        <td><div class="yellowball">42</div><div id="history42">0</div> 회<td>
-        <td><div class="yellowball">43</div><div id="history43">0</div> 회<td>
-        <td><div class="yellowball">44</div><div id="history44">0</div> 회<td>
-        <td><div class="yellowball">45</div><div id="history45">0</div> 회<td>
+        <td><div class="ball yellow">41</div><div style="clear: both;"></div><div class="history" id="history41">0</div></td>
+        <td><div class="ball yellow">42</div><div style="clear: both;"></div><div class="history" id="history42">0</div></td>
+        <td><div class="ball yellow">43</div><div style="clear: both;"></div><div class="history" id="history43">0</div></td>
+        <td><div class="ball yellow">44</div><div style="clear: both;"></div><div class="history" id="history44">0</div></td>
+        <td><div class="ball yellow">45</div><div style="clear: both;"></div><div class="history" id="history45">0</div></td>
 	</tr>
       </table>
 </div>
