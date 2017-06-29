@@ -22,37 +22,37 @@
 }
 
 .ball{
-	width: 35px;
-	height: 35px;
+	width: 30px;
+	height: 30px;
 	text-align: center ;
 	color: #fff;
-	font-size: 16pt;
+	font-size: 13pt;
 	float: left;
 }
 
 .ball.red{
 	background: url(redball.png) no-repeat;
-	background-size: 35px;
+	background-size: 30px;
 }
 
 .ball.yellow{
 	background: url(yellowball.png) no-repeat;
-	background-size: 35px;
+	background-size: 30px;
 }
 
 .ball.wien{
 	background: url(wienball.png) no-repeat;
-	background-size: 35px;
+	background-size: 30px;
 }
 
 .ball.purple{
 	background: url(purple.png) no-repeat;
-	background-size: 35px;
+	background-size: 30px;
 }
 
 .ball.paran{
 	background: url(paranball.png) no-repeat;
-	background-size: 35px;
+	background-size: 30px;
 }
 </style>
 <script type="text/javascript" src="jquery-1.11.3.min.js"></script>
@@ -106,6 +106,10 @@ $(function(){
 		});
 		
 		setHistory()
+	});
+	
+	$('#lottoSimul').click(function(){
+		location.href = 'http://parkminkyu.github.io/newLotto/lottoWin.html';
 	});
 });
 
@@ -179,20 +183,23 @@ function CallKaKaoTalk(){
 </head>
 <body>
 <div class="container">
-	<h3 id="lottoTitle"></h3>
-	<div>
-		추첨일 : <span id="winnerDate"></span>
+	<div class="page-header">
+	  <h3 id="lottoTitle"></h3>
+	  추첨일 : <span id="winnerDate"></span>
 	</div>
-	<div id="winnerArea">
-		<div>
-			총 판매금 : <span id="totMnt"></span>원		
+	<div>
+		
+	</div>
+	<div id="winnerArea" class="panel panel-primary">
+		<div class="panel-heading">
+			당첨금 : <span id="winnerMnt"></span>원 (<span id="winnerCnt"></span> 명)
 		</div>
-		<div>
+		<div class="panel-body">
 			<div id="winnerNumber"></div>
 		</div>
 		<div style="clear: both;"></div>
-		<div>
-			당첨금 : <span id="winnerMnt"></span>원 (<span id="winnerCnt"></span> 명)
+		<div class="panel-footer">
+			총 판매금 : <span id="totMnt"></span>원
 		</div>
 	</div>
 	<div class="btn-group" role="group" aria-label="...">
@@ -214,6 +221,7 @@ function CallKaKaoTalk(){
 	<div class="btn-group" role="group" aria-label="...">
 	  <button type="button" class="btn btn-primary" id="manySort">많이나온순</button>
 	  <button type="button" class="btn btn-default" id="smallSort">적게나온순</button>
+	  <button type="button" class="btn btn-warning" id="lottoSimul">확률계산기</button>
 	</div>
 <table class="table" id="historyArea">
 <tr>
