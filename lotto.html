@@ -187,9 +187,7 @@ function CallKaKaoTalk(){
 	  <h3 id="lottoTitle"></h3>
 	  추첨일 : <span id="winnerDate"></span>
 	</div>
-	<div>
-		
-	</div>
+	
 	<div id="winnerArea" class="panel panel-primary">
 		<div class="panel-heading">
 			당첨금 : <span id="winnerMnt"></span>원 (<span id="winnerCnt"></span> 명)
@@ -216,79 +214,6 @@ function CallKaKaoTalk(){
 	    </ul>
 	  </div>
 	</div>
-	
-	<h3>번호통계(보너스 미포함)</h3>
-	<div class="btn-group" role="group" aria-label="...">
-	  <button type="button" class="btn btn-default" id="numSort">번호순</button>
-	  <button type="button" class="btn btn-primary" id="manySort">많이나온순</button>
-	  <button type="button" class="btn btn-default" id="smallSort">적게나온순</button>
-	  <button type="button" class="btn btn-warning" id="lottoSimul">확률계산기</button>
-	</div>
-<table class="table" id="historyArea">
-<tr>
-        <td><div class="ball red">1</div><div style="clear: both;"></div><div class="history" id="history1">0</div></td>
-        <td><div class="ball red">2</div><div style="clear: both;"></div><div class="history" id="history2">0</div></td>
-        <td><div class="ball red">3</div><div style="clear: both;"></div><div class="history" id="history3">0</div></td>
-        <td><div class="ball red">4</div><div style="clear: both;"></div><div class="history" id="history4">0</div></td>
-        <td><div class="ball red">5</div><div style="clear: both;"></div><div class="history" id="history5">0</div></td>
-	</tr>                                                                     
-	<tr>                                                                      
-        <td><div class="ball red">6</div><div style="clear: both;"></div><div class="history" id="history6">0</div></td>
-        <td><div class="ball red">7</div><div style="clear: both;"></div><div class="history" id="history7">0</div></td>
-        <td><div class="ball red">8</div><div style="clear: both;"></div><div class="history" id="history8">0</div></td>
-        <td><div class="ball red">9</div><div style="clear: both;"></div><div class="history" id="history9">0</div></td>
-        <td><div class="ball red">10</div><div style="clear: both;"></div><div class="history" id="history10">0</div></td>
-	</tr>
-	<tr>
-        <td><div class="ball paran">11</div><div style="clear: both;"></div><div class="history" id="history11">0</div></td>
-        <td><div class="ball paran">12</div><div style="clear: both;"></div><div class="history" id="history12">0</div></td>
-        <td><div class="ball paran">13</div><div style="clear: both;"></div><div class="history" id="history13">0</div></td>
-        <td><div class="ball paran">14</div><div style="clear: both;"></div><div class="history" id="history14">0</div></td>
-        <td><div class="ball paran">15</div><div style="clear: both;"></div><div class="history" id="history15">0</div></td>
-	</tr>                                                                        
-	<tr>                                                                         
-        <td><div class="ball paran">16</div><div style="clear: both;"></div><div class="history" id="history16">0</div></td>
-        <td><div class="ball paran">17</div><div style="clear: both;"></div><div class="history" id="history17">0</div></td>
-        <td><div class="ball paran">18</div><div style="clear: both;"></div><div class="history" id="history18">0</div></td>
-        <td><div class="ball paran">19</div><div style="clear: both;"></div><div class="history" id="history19">0</div></td>
-        <td><div class="ball paran">20</div><div style="clear: both;"></div><div class="history" id="history20">0</div></td>
-	</tr>        
-	<tr>         
-        <td><div class="ball purple">21</div><div style="clear: both;"></div><div class="history" id="history21">0</div></td>
-        <td><div class="ball purple">22</div><div style="clear: both;"></div><div class="history" id="history22">0</div></td>
-        <td><div class="ball purple">23</div><div style="clear: both;"></div><div class="history" id="history23">0</div></td>
-        <td><div class="ball purple">24</div><div style="clear: both;"></div><div class="history" id="history24">0</div></td>
-        <td><div class="ball purple">25</div><div style="clear: both;"></div><div class="history" id="history25">0</div></td>
-	</tr>                                                                         
-	<tr>                                                                          
-        <td><div class="ball purple">26</div><div style="clear: both;"></div><div class="history" id="history26">0</div></td>
-        <td><div class="ball purple">27</div><div style="clear: both;"></div><div class="history" id="history27">0</div></td>
-        <td><div class="ball purple">28</div><div style="clear: both;"></div><div class="history" id="history28">0</div></td>
-        <td><div class="ball purple">29</div><div style="clear: both;"></div><div class="history" id="history29">0</div></td>
-        <td><div class="ball purple">30</div><div style="clear: both;"></div><div class="history" id="history30">0</div></td>
-	</tr>        
-	<tr>         
-        <td><div class="ball wien">31</div><div style="clear: both;"></div><div class="history" id="history31">0</div></td>
-        <td><div class="ball wien">32</div><div style="clear: both;"></div><div class="history" id="history32">0</div></td>
-        <td><div class="ball wien">33</div><div style="clear: both;"></div><div class="history" id="history33">0</div></td>
-        <td><div class="ball wien">34</div><div style="clear: both;"></div><div class="history" id="history34">0</div></td>
-        <td><div class="ball wien">35</div><div style="clear: both;"></div><div class="history" id="history35">0</div></td>
-	</tr>                                                                       
-	<tr>                                                                        
-        <td><div class="ball wien">36</div><div style="clear: both;"></div><div class="history" id="history36">0</div></td>
-        <td><div class="ball wien">37</div><div style="clear: both;"></div><div class="history" id="history37">0</div></td>
-        <td><div class="ball wien">38</div><div style="clear: both;"></div><div class="history" id="history38">0</div></td>
-        <td><div class="ball wien">39</div><div style="clear: both;"></div><div class="history" id="history39">0</div></td>
-        <td><div class="ball wien">40</div><div style="clear: both;"></div><div class="history" id="history40">0</div></td>
-	</tr>        
-	<tr>         
-        <td><div class="ball yellow">41</div><div style="clear: both;"></div><div class="history" id="history41">0</div></td>
-        <td><div class="ball yellow">42</div><div style="clear: both;"></div><div class="history" id="history42">0</div></td>
-        <td><div class="ball yellow">43</div><div style="clear: both;"></div><div class="history" id="history43">0</div></td>
-        <td><div class="ball yellow">44</div><div style="clear: both;"></div><div class="history" id="history44">0</div></td>
-        <td><div class="ball yellow">45</div><div style="clear: both;"></div><div class="history" id="history45">0</div></td>
-	</tr>
-      </table>
 </div>
 </body>
 </html>

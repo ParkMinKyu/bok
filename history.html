@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
+<title>로또 번호 및 당첨금 확인 화면</title>
+<link rel="stylesheet" href="/bok/bootstrap/css/bootstrap.min.css"/>
+<link rel="stylesheet" href="/bok/bootstrap/css/bootstrap-theme.min.css"/>
+<style type="text/css">
+*{
+	font-size : 12pt;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 300px;
+    overflow-x: hidden;
+}
+
+.history{
+    background-color: antiquewhite;
+}
+
+.ball{
+	width: 30px;
+	height: 30px;
+	text-align: center ;
+	color: #fff;
+	font-size: 13pt;
+	float: left;
+}
+
+.ball.red{
+	background: url(redball.png) no-repeat;
+	background-size: 30px;
+}
+
+.ball.yellow{
+	background: url(yellowball.png) no-repeat;
+	background-size: 30px;
+}
+
+.ball.wien{
+	background: url(wienball.png) no-repeat;
+	background-size: 30px;
+}
+
+.ball.purple{
+	background: url(purple.png) no-repeat;
+	background-size: 30px;
+}
+
+.ball.paran{
+	background: url(paranball.png) no-repeat;
+	background-size: 30px;
+}
+</style>
+<script type="text/javascript" src="jquery-1.11.3.min.js"></script>
+<script type="text/javascript" src="/bok/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+var data = {};
+var historyArray = new Array();
+$(function(){
+	$.ajax({
+		url : 'lottoHistory.json?d='+ new Date(),
+		success : function(res){
+			data = res;
+			getHistoryBySum();
+			
+			var lastYear = new Date(data[data.length-1].drwNoDate).getFullYear();
+			
+			for(var i = lastYear ; i >= 2002 ; i --){
+				$('#yearSelect').append('<li><a href="#" onclick="getHistoryByYear('+i+')">'+i+'년</a></li>');
+			}
+			
+			for(var i = 1 ; i <= 45 ; i ++){
+				$('#nextNumSelect').append('<li><a href="#" onclick="getNextNumHistory('+i+')">'+i+'번 과 같이 출현수</a></li>');
+			}
+		}
+	});
+	
+	$('#manySort').click(function(){
+		historyArray.sort(function(a,b){
+			return parseInt(b.find('.history').text()) - parseInt(a.find('.history').text()); 
+		});
+		
+		setHistory()
+	});
+	
+	$('#smallSort').click(function(){
+		historyArray.sort(function(a,b){
+			return parseInt(a.find('.history').text())- parseInt(b.find('.history').text()); 
+		});
+		
+		setHistory()
+	});
+
+	$('#numSort').click(function(){
+		getHistoryBySum();
+	});
+	
+	$('#lottoSimul').click(function(){
+		location.href = 'http://parkminkyu.github.io/newLotto/lottoWin.html';
+	});
+});
+
+function setHistory(){
+	for(var i = 0 ; i < historyArray.length ; i ++){
+		$($('#historyArea td')[i]).html(historyArray[i].html());
+	}
+}
+
+function clearHistory(){
+	for(var i = 1 ; i <= 45 ; i ++){
+		$('#history'+i).text(0);
+	}
+}
+
+function getHistory(type, val){
+	if(type == 1){
+		for(var i = 0 ; i < data.length ; i ++){
+			setHistoryData(data[i]);
+		}
+	}else if(type == 2){
+		for(var i = 0 ; i < data.length ; i ++){
+			var dataMonth = new Date(data[i].drwNoDate).getMonth();
+			if(dataMonth+1 == val){
+				setHistoryData(data[i]);
+			}
+		}
+	}else if(type == 3){
+		for(var i = 0 ; i < data.length ; i ++){
+			var dataYear = new Date(data[i].drwNoDate).getFullYear();
+			if(dataYear == val){
+				setHistoryData(data[i]);
+			}
+		}
+	}else if(type == 4){
+		for(var i = 0 ; i < data.length ; i ++){
+			if(data[i].drwtNo1 == val || data[i].drwtNo2 == val || data[i].drwtNo3 == val || data[i].drwtNo4 == val || data[i].drwtNo5 == val || data[i].drwtNo6 == val){
+				setHistoryData(data[i]);
+			}
+		}
+	}
+	
+	historyArray = new Array();
+	
+	$('#historyArea td').each(function(){
+		historyArray.push($(this).clone());
+	});
+}
+
+function setHistoryData(winData){
+	$('#history'+winData.drwtNo1).text(parseInt($('#history'+winData.drwtNo1).text())+1);
+	$('#history'+winData.drwtNo2).text(parseInt($('#history'+winData.drwtNo2).text())+1);
+	$('#history'+winData.drwtNo3).text(parseInt($('#history'+winData.drwtNo3).text())+1);
+	$('#history'+winData.drwtNo4).text(parseInt($('#history'+winData.drwtNo4).text())+1);
+	$('#history'+winData.drwtNo5).text(parseInt($('#history'+winData.drwtNo5).text())+1);
+	$('#history'+winData.drwtNo6).text(parseInt($('#history'+winData.drwtNo6).text())+1);
+}
+
+function getHistoryBySum(){
+	clearHistory();
+	getHistory(1);	
+	$('#userSelect').text("총계");
+	$('#manySort').click();
+}
+
+function getHistoryByMonth(month){
+	clearHistory();
+	getHistory(2,month);	
+	$('#userSelect').text(month + "월");
+	$('#manySort').click();
+}
+
+function getHistoryByYear(year){
+	clearHistory();
+	getHistory(3,year);	
+	$('#userSelect').text(year + "년");
+	$('#manySort').click();
+}
+
+function getNextNumHistory(num){
+	clearHistory();
+	getHistory(4,num);	
+	$('#userSelect').text(num + " 출현시");
+	$('#manySort').click();
+}
+</script>
+</head>
+<body>
+<div class="container">
+	<div class="page-header">
+	  <h3><span id="userSelect" style="font-size: 24px;"></span> 번호통계 <small>(보너스 미포함)</small></h3>
+	</div>
+	
+	<div class="btn-group" role="group" aria-label="...">
+		<button type="button" class="btn btn-default" id="numSort">총계</button>	
+		<div class="btn-group" role="group">
+		    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				월별<span class="caret"></span>
+		    </button>
+		    <ul class="dropdown-menu scrollable-menu">
+		      <li><a href="#" onclick="getHistoryByMonth(1)">1월</a></li>
+				<li><a href="#" onclick="getHistoryByMonth(2)">2월</a></li>
+				<li><a href="#" onclick="getHistoryByMonth(3)">3월</a></li>
+				<li><a href="#" onclick="getHistoryByMonth(4)">4월</a></li>
+				<li><a href="#" onclick="getHistoryByMonth(5)">5월</a></li>
+				<li><a href="#" onclick="getHistoryByMonth(6)">6월</a></li>
+				<li><a href="#" onclick="getHistoryByMonth(7)">7월</a></li>
+				<li><a href="#" onclick="getHistoryByMonth(8)">8월</a></li>
+				<li><a href="#" onclick="getHistoryByMonth(9)">9월</a></li>
+				<li><a href="#" onclick="getHistoryByMonth(10)">10월</a></li>
+				<li><a href="#" onclick="getHistoryByMonth(11)">11월</a></li>
+				<li><a href="#" onclick="getHistoryByMonth(12)">12월</a></li>
+		    </ul>
+		</div>
+		<div class="btn-group" role="group">
+		    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				연도별<span class="caret"></span>
+		    </button>
+		    <ul class="dropdown-menu scrollable-menu" id="yearSelect">
+		      
+		    </ul>
+		</div>
+	</div>
+	<div class="btn-group" role="group" aria-label="...">
+		<div class="btn-group" role="group">
+		    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				동시 출현<span class="caret"></span>
+		    </button>
+		    <ul class="dropdown-menu scrollable-menu" id="nextNumSelect">
+		    </ul>
+		</div>
+		<div class="btn-group" role="group">
+		    <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				정렬<span class="caret"></span>
+		    </button>
+		    <ul class="dropdown-menu scrollable-menu">
+			  <li><a href="#" id="manySort">오름차순</a></li>
+			  <li><a href="#" id="smallSort">내림차순</a></li>
+		    </ul>
+		</div>
+	</div>
+<table class="table" id="historyArea">
+<tr>
+        <td><div class="ball red">1</div><div style="clear: both;"></div><div class="history" id="history1">0</div></td>
+        <td><div class="ball red">2</div><div style="clear: both;"></div><div class="history" id="history2">0</div></td>
+        <td><div class="ball red">3</div><div style="clear: both;"></div><div class="history" id="history3">0</div></td>
+        <td><div class="ball red">4</div><div style="clear: both;"></div><div class="history" id="history4">0</div></td>
+        <td><div class="ball red">5</div><div style="clear: both;"></div><div class="history" id="history5">0</div></td>
+	</tr>                                                                     
+	<tr>                                                                      
+        <td><div class="ball red">6</div><div style="clear: both;"></div><div class="history" id="history6">0</div></td>
+        <td><div class="ball red">7</div><div style="clear: both;"></div><div class="history" id="history7">0</div></td>
+        <td><div class="ball red">8</div><div style="clear: both;"></div><div class="history" id="history8">0</div></td>
+        <td><div class="ball red">9</div><div style="clear: both;"></div><div class="history" id="history9">0</div></td>
+        <td><div class="ball red">10</div><div style="clear: both;"></div><div class="history" id="history10">0</div></td>
+	</tr>
+	<tr>
+        <td><div class="ball paran">11</div><div style="clear: both;"></div><div class="history" id="history11">0</div></td>
+        <td><div class="ball paran">12</div><div style="clear: both;"></div><div class="history" id="history12">0</div></td>
+        <td><div class="ball paran">13</div><div style="clear: both;"></div><div class="history" id="history13">0</div></td>
+        <td><div class="ball paran">14</div><div style="clear: both;"></div><div class="history" id="history14">0</div></td>
+        <td><div class="ball paran">15</div><div style="clear: both;"></div><div class="history" id="history15">0</div></td>
+	</tr>                                                                        
+	<tr>                                                                         
+        <td><div class="ball paran">16</div><div style="clear: both;"></div><div class="history" id="history16">0</div></td>
+        <td><div class="ball paran">17</div><div style="clear: both;"></div><div class="history" id="history17">0</div></td>
+        <td><div class="ball paran">18</div><div style="clear: both;"></div><div class="history" id="history18">0</div></td>
+        <td><div class="ball paran">19</div><div style="clear: both;"></div><div class="history" id="history19">0</div></td>
+        <td><div class="ball paran">20</div><div style="clear: both;"></div><div class="history" id="history20">0</div></td>
+	</tr>        
+	<tr>         
+        <td><div class="ball purple">21</div><div style="clear: both;"></div><div class="history" id="history21">0</div></td>
+        <td><div class="ball purple">22</div><div style="clear: both;"></div><div class="history" id="history22">0</div></td>
+        <td><div class="ball purple">23</div><div style="clear: both;"></div><div class="history" id="history23">0</div></td>
+        <td><div class="ball purple">24</div><div style="clear: both;"></div><div class="history" id="history24">0</div></td>
+        <td><div class="ball purple">25</div><div style="clear: both;"></div><div class="history" id="history25">0</div></td>
+	</tr>                                                                         
+	<tr>                                                                          
+        <td><div class="ball purple">26</div><div style="clear: both;"></div><div class="history" id="history26">0</div></td>
+        <td><div class="ball purple">27</div><div style="clear: both;"></div><div class="history" id="history27">0</div></td>
+        <td><div class="ball purple">28</div><div style="clear: both;"></div><div class="history" id="history28">0</div></td>
+        <td><div class="ball purple">29</div><div style="clear: both;"></div><div class="history" id="history29">0</div></td>
+        <td><div class="ball purple">30</div><div style="clear: both;"></div><div class="history" id="history30">0</div></td>
+	</tr>        
+	<tr>         
+        <td><div class="ball wien">31</div><div style="clear: both;"></div><div class="history" id="history31">0</div></td>
+        <td><div class="ball wien">32</div><div style="clear: both;"></div><div class="history" id="history32">0</div></td>
+        <td><div class="ball wien">33</div><div style="clear: both;"></div><div class="history" id="history33">0</div></td>
+        <td><div class="ball wien">34</div><div style="clear: both;"></div><div class="history" id="history34">0</div></td>
+        <td><div class="ball wien">35</div><div style="clear: both;"></div><div class="history" id="history35">0</div></td>
+	</tr>                                                                       
+	<tr>                                                                        
+        <td><div class="ball wien">36</div><div style="clear: both;"></div><div class="history" id="history36">0</div></td>
+        <td><div class="ball wien">37</div><div style="clear: both;"></div><div class="history" id="history37">0</div></td>
+        <td><div class="ball wien">38</div><div style="clear: both;"></div><div class="history" id="history38">0</div></td>
+        <td><div class="ball wien">39</div><div style="clear: both;"></div><div class="history" id="history39">0</div></td>
+        <td><div class="ball wien">40</div><div style="clear: both;"></div><div class="history" id="history40">0</div></td>
+	</tr>        
+	<tr>         
+        <td><div class="ball yellow">41</div><div style="clear: both;"></div><div class="history" id="history41">0</div></td>
+        <td><div class="ball yellow">42</div><div style="clear: both;"></div><div class="history" id="history42">0</div></td>
+        <td><div class="ball yellow">43</div><div style="clear: both;"></div><div class="history" id="history43">0</div></td>
+        <td><div class="ball yellow">44</div><div style="clear: both;"></div><div class="history" id="history44">0</div></td>
+        <td><div class="ball yellow">45</div><div style="clear: both;"></div><div class="history" id="history45">0</div></td>
+	</tr>
+      </table>
+</div>
+</body>
+</html>
