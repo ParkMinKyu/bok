@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
-<title>로또 번호 및 당첨금 확인 화면</title>
+<title>로또 번호 확인</title>
 <link rel="stylesheet" href="/bok/bootstrap/css/bootstrap.min.css"/>
 <link rel="stylesheet" href="/bok/bootstrap/css/bootstrap-theme.min.css"/>
 <style type="text/css">
@@ -169,6 +169,7 @@ function openQrScan(){
 function CallKaKaoTalk(){
 	var lottoTitle = $('#lottoTitle').text();
 	var matchYear = $('#winnerDate').html().replace(/<br>/g,"\n");
+	var winMoney = ($('.panel-heading').text()).replace(/[ /\t /\r /\n]+/,'');
 	var realNums ="";
 	for(var i = 0 ; i <= 5 ; i ++){
 	realNums += $($('#winnerNumber div')[i]).text();
@@ -177,7 +178,7 @@ function CallKaKaoTalk(){
 	
 	realNums += " 보너스 : " + $($('#winnerNumber div')[7]).text();
 	
-	javascriptService.CallKaKaoTalk(lottoTitle, matchYear, realNums);
+	javascriptService.CallKaKaoTalk(lottoTitle, matchYear + winMoney, realNums);
 }
 </script>
 </head>
