@@ -109,6 +109,16 @@ $(function(){
 	$('#lottoSimul').click(function(){
 		location.href = 'http://parkminkyu.github.io/newLotto/lottoWin.html';
 	});
+	
+	for(var i = 1 ; i <= 6 ; i ++ ){
+		for(var k = 1 ; k <= 45 ; k++){
+			$('#userNum'+i).append('<option value='+k+'>'+k+'</option>');
+		}
+	}
+	
+	$('#myModal').on('shown.bs.modal', function () {
+	  $('#myInput').focus()
+	})
 });
 
 function setHistory(){
@@ -180,6 +190,66 @@ function CallKaKaoTalk(){
 	
 	javascriptService.CallKaKaoTalk(lottoTitle, matchYear, realNums + "\n" + winMoney);
 }
+
+function numberCheck(){
+	for(var i = 1 ; i <= 6 ; i ++ ){
+		for(var k = 1 ; k <= 6 ; k++){
+			if(i != k && $('#userNum'+i).val() == $('#userNum'+k).val()){
+				$('#numberResult').html('같은 번호가 선택 되었습니다.<br>번호를 다시 선택 하세요.');	
+				$('#myModal').modal('show');
+				return;
+			}
+		}
+	}
+	
+	var winData = data[parseInt(($('#lottoTitle').text()).replace(/[^0-9]/g,''),10)-1];
+	var matchCount = 0;
+	var isBonus = false;
+	$('#numberResult').html('');
+	for(var i = 1 ; i <= 6 ; i ++ ){
+		var num = parseInt($('#userNum'+i).val(),10);
+		if(num == winData.drwtNo1 || num == winData.drwtNo2 || num == winData.drwtNo3 || num == winData.drwtNo4 || num == winData.drwtNo5 || num == winData.drwtNo6 ){
+			$('#numberResult').append(createBall(num));
+			matchCount++;
+		}
+		
+		if(!isBonus && num == winData.bnusNo){
+			isBonus = true;
+		}
+	}
+	
+	/* <span class="label label-default">Default</span>
+	<span class="label label-primary">Primary</span>
+	<span class="label label-success">Success</span>
+	<span class="label label-info">Info</span>
+	<span class="label label-warning">Warning</span>
+	<span class="label label-danger">Danger</span> */
+	
+	switch(matchCount){
+	case 3:
+		$('#userLevel').text('5등 입니다.');
+		break;
+	case 4:
+		$('#userLevel').text('4등 입니다.');
+		break;
+	case 5:
+		if(isBonus){
+			$('#userLevel').text('2등 입니다.');
+			$('#numberResult').append("<div style='float:left;font-size:18pt;'>&nbsp;&nbsp;+&nbsp;&nbsp;</div>");
+			$('#numberResult').append(createBall(winData.bnusNo));
+		}else{
+			$('#userLevel').text('3등 입니다.');
+		}
+		break;
+	case 6:
+		$('#userLevel').text('1등 입니다.');
+		break;
+	default :
+		$('#userLevel').text('꽝 입니다.');
+		break;
+	}
+	$('#myModal').modal('show');
+}
 </script>
 </head>
 <body>
@@ -201,11 +271,8 @@ function CallKaKaoTalk(){
 			총 판매금 : <span id="totMnt"></span>원
 		</div>
 	</div>
-	<div class="btn-group" role="group" aria-label="...">
-	  <button type="button" class="btn btn-default" onclick="openQrScan();" style="height: 49px;">QR 확인</button>
-	  <button type="button" class="btn btn-warning" onclick="CallKaKaoTalk();">번호 전송 <img src="kakaolink_btn_small.png" style="vertical-align: middle;"/></button>
-	
-	  <div class="btn-group" role="group">
+	<div class="btn-group btn-group-justified" role="group" aria-label="...">
+		<div class="btn-group" role="group">
 	    <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" style="height: 49px;" aria-expanded="false">
 	      다른회차
 	      <span class="caret"></span>
@@ -213,6 +280,71 @@ function CallKaKaoTalk(){
 	    <ul class="dropdown-menu scrollable-menu" id="drwNo">
 	      
 	    </ul>
+	  </div>
+		<div class="btn-group" role="group">
+		  	<button type="button" class="btn btn-warning" style="padding: 6px 6px;" onclick="CallKaKaoTalk();">번호 전송 <img src="kakaolink_btn_small.png" style="vertical-align: middle;"/></button>
+		</div>
+		<div class="btn-group" role="group">
+	  		<button type="button" class="btn btn-default" onclick="openQrScan();" style="height: 49px;">QR 확인</button>
+	  	</div>
+	</div>
+	<div class="alert alert-danger" style="margin-top: 20px;" role="alert">QR코드 인식이 안될경우 아래 번호를 선택하여 확인하세요.</div>
+	
+	<div class="input-group input-group-lg">
+  		<span class="input-group-addon" id="basic-addon1">선택 번호 1</span>
+		<select id="userNum1" class="form-control">
+		</select>
+	</div>
+	<div class="input-group input-group-lg" style="margin-top: 20px;">
+  		<span class="input-group-addon" id="basic-addon2">선택 번호 2</span>
+		<select id="userNum2" class="form-control">
+		</select>
+	</div>
+	<div class="input-group input-group-lg" style="margin-top: 20px;">
+  		<span class="input-group-addon" id="basic-addon3">선택 번호 3</span>
+		<select id="userNum3" class="form-control">
+		</select>
+	</div>
+	<div class="input-group input-group-lg" style="margin-top: 20px;">
+  		<span class="input-group-addon" id="basic-addon4">선택 번호 4</span>
+		<select id="userNum4" class="form-control">
+		</select>
+	</div>
+	<div class="input-group input-group-lg" style="margin-top: 20px;">
+  		<span class="input-group-addon" id="basic-addon5">선택 번호 5</span>
+		<select id="userNum5" class="form-control">
+		</select>
+	</div>
+	<div class="input-group input-group-lg" style="margin-top: 20px;">
+  		<span class="input-group-addon" id="basic-addon6">선택 번호 6</span>
+		<select id="userNum6" class="form-control">
+		</select>
+	</div>
+	
+	<div class="btn-group btn-group-justified" role="group" aria-label="..." style="margin-top: 20px; margin-bottom: 20px;">
+		<div class="btn-group" role="group">
+			<button type="button" class="btn btn-info" style="height: 49px;" onclick="numberCheck();">당첨 확인</button>
+		</div>
+	</div>
+	
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">당첨 결과</h4>
+	      </div>
+	      <div class="modal-body">
+	      	<div class="alert alert-success" role="alert" id="userLevel"></div>
+	        <div id="numberResult"></div>
+	        <div style="clear: both;"></div>
+	        <div class="alert alert-info" role="alert" style="margin-top: 20px;">결과가 정확하지 않을 수 있으니 번호를 다시 확인하세요.</div>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+	      </div>
+	    </div>
 	  </div>
 	</div>
 </div>
