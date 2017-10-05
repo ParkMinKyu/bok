@@ -132,8 +132,8 @@ function setHistory(){
 }
 
 function setWinnerInfo(winData){
-	let winner = winData;
-	let winDate = winner.drwNoDate;
+	var winner = winData;
+	var winDate = winner.drwNoDate;
 	$('#winnerDate').text(winDate);
 	$('#winnerNumber').html('');
 	$('#winnerNumber').append(createBall(winner.drwtNo1));
@@ -151,7 +151,7 @@ function setWinnerInfo(winData){
 }
 
 function createBall(ballNum){
-	let ball = "";
+	var ball = "";
 	if(ballNum <= 10){
 		ball = "<div class='ball red' data-num='"+ballNum+"'>"+ballNum+"</div>";
 	}else if(ballNum <= 20){
