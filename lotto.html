@@ -35,7 +35,6 @@
 	background-size: 30px;
 }
 
-.ball.yellow{
 	background: url(yellowball.png) no-repeat;
 	background-size: 30px;
 }
@@ -64,9 +63,13 @@ $(function(){
 	$.ajax({
 		url : 'lottoHistory.json?d='+ new Date(),
 		success : function(res){
+			console.log('1');
 			data = res;
+			console.log('2');
 			createDrwNo(data.length);
+			console.log('3');
 			setWinnerInfo(data[data.length-1]);
+			console.log('4');
 			for(var i = 0 ; i < data.length ; i ++){
 				$('#history'+data[i].drwtNo1).text(parseInt($('#history'+data[i].drwtNo1).text())+1);
 				$('#history'+data[i].drwtNo2).text(parseInt($('#history'+data[i].drwtNo2).text())+1);
@@ -75,10 +78,11 @@ $(function(){
 				$('#history'+data[i].drwtNo5).text(parseInt($('#history'+data[i].drwtNo5).text())+1);
 				$('#history'+data[i].drwtNo6).text(parseInt($('#history'+data[i].drwtNo6).text())+1);
 			}
-			
+			console.log('5');
 			$('#historyArea td').each(function(){
 				historyArray.push($(this).clone());
 			});
+			console.log('6');
 		}
 	});
 	
