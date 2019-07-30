@@ -150,6 +150,17 @@ $(function(){
 		location.href = 'http://parkminkyu.github.io/newLotto/lottoWin.html';
 	});
 
+	$('#tab3').on('click',function(){
+		var filter = "win16|win32|win64|mac|macintel";
+		if(navigator.platform){
+			if(0 > filter.indexOf(navigator.platform.toLowerCase())){
+				location.href="market://details?id=com.min.lotto";
+			}else{
+				location.href="https://play.google.com/store/apps/details?id=com.min.lotto";
+			}
+		}
+	});
+
 	$('#tab1,#tab2').click(function(){
         $('#tab1,#tab2').parent().removeClass('active');
 	    $('#tab1Area, #tab2Area').hide();
@@ -473,7 +484,7 @@ function createBall(ballNum){
 	<ul class="nav nav-tabs">
 		<li role="presentation" class="active"><a href="#" id="tab1">통계</a></li>
 		<li role="presentation"><a href="#" id="tab2">홀짝</a></li>
-		<li role="presentation"><a href="#" id="tab3"></a></li>
+		<li role="presentation"><a href="#" id="tab3">어플</a></li>
 		<li role="presentation"><a href="#"><label for="bonusYn">보너스 포함</label> <input type="checkbox" checked="checked" id="bonusYn"></a></li>
 	</ul>
 
