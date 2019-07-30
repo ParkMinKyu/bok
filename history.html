@@ -37,8 +37,8 @@
 }
 
 .ball{
-	width: 32px;
-	height: 32px;
+	width: 31px;
+	height: 31px;
 	text-align: center ;
 	color: #fff;
 	font-size: 16pt;
@@ -47,27 +47,27 @@
 
 .ball.red{
 	background: url(redball.png) no-repeat;
-	background-size: 32px;
+	background-size: 31px;
 }
 
 .ball.yellow{
 	background: url(yellowball.png) no-repeat;
-	background-size: 32px;
+	background-size: 31px;
 }
 
 .ball.wien{
 	background: url(wienball.png) no-repeat;
-	background-size: 32px;
+	background-size: 31px;
 }
 
 .ball.purple{
 	background: url(purple.png) no-repeat;
-	background-size: 32px;
+	background-size: 31px;
 }
 
 .ball.paran{
 	background: url(paranball.png) no-repeat;
-	background-size: 32px;
+	background-size: 31px;
 }
 </style>
 <script type="text/javascript" src="jquery-1.11.3.min.js"></script>
@@ -123,6 +123,7 @@ $(function(){
                 getHistoryBySum(selectValue);
 			    break;
         }
+        setOddEvenNumber(data);
     });
 
 	$('#manySort').click(function(){
@@ -155,6 +156,12 @@ $(function(){
 	    $('#' + this.id + 'Area').show();
 	    $(this).parent().addClass('active');
 	});
+
+	try{
+	    if(javascriptService)console.log('in Android');
+	}catch(e){
+	    $('#installAlert').show();
+	}
 });
 
 function refrash(){
@@ -179,8 +186,75 @@ function callWinHistorys(){
             for(var i = 1 ; i <= 45 ; i ++){
                 $('#nextNumSelect').append('<li><a href="#" onclick="getNextNumHistory('+i+')">'+i+'번 출현시</a></li>');
             }
+
+            setOddEvenNumber(data);
         }
     });
+}
+
+function setOddEvenNumber(data){
+    var html = "";
+
+    for(i = (data.length -1)  ; i >= 0 ; i --){
+        var winData = data[i];
+        var no1 = createBall(winData.drwtNo1);
+        var no2 = createBall(winData.drwtNo2);
+        var no3 = createBall(winData.drwtNo3);
+        var no4 = createBall(winData.drwtNo4);
+        var no5 = createBall(winData.drwtNo5);
+        var no6 = createBall(winData.drwtNo6);
+        var bns = createBall(winData.bnusNo);
+        html += "<tr><td>"+winData.drwNo+"</td>"
+        var odd = "<td>";
+        var even = "<td>";
+        if(isOdd(winData.drwtNo1)){
+            odd += no1;
+		}else{
+            even += no1;
+		}
+        if(isOdd(winData.drwtNo2)){
+            odd += no2;
+        }else{
+            even += no2;
+        }
+        if(isOdd(winData.drwtNo3)){
+            odd += no3;
+        }else{
+            even += no3;
+        }
+        if(isOdd(winData.drwtNo4)){
+            odd += no4;
+        }else{
+            even += no4;
+        }
+        if(isOdd(winData.drwtNo5)){
+            odd += no5;
+        }else{
+            even += no5;
+        }
+        if(isOdd(winData.drwtNo6)){
+            odd += no6;
+        }else{
+            even += no6;
+        }
+
+        if($('#bonusYn').is(':checked')){
+            if(isOdd(winData.bnusNo)){
+                odd += bns;
+            }else{
+                even += bns;
+            }
+		}
+
+        odd +="</td>";
+        even +="</td>";
+        html += odd + even + "</tr>";
+	}
+	$('#oddEvenTbody').html(html);
+}
+
+function isOdd(num){
+    return num%2 == 1;
 }
 
 function setHistory(){
@@ -216,7 +290,9 @@ function getHistory(type, val){
 		}
 	}else if(type == 4){
 		for(var i = 0 ; i < data.length ; i ++){
-			if(data[i].drwtNo1 == val || data[i].drwtNo2 == val || data[i].drwtNo3 == val || data[i].drwtNo4 == val || data[i].drwtNo5 == val || data[i].drwtNo6 == val){
+			if(data[i].drwtNo1 == val || data[i].drwtNo2 == val || data[i].drwtNo3 == val
+				|| data[i].drwtNo4 == val || data[i].drwtNo5 == val || data[i].drwtNo6 == val
+				|| ($('#bonusYn').is(':checked') && data[i].bnusNo == val)){
 				setHistoryData(data[i]);
 			}
 		}
@@ -291,6 +367,35 @@ function getHistoryByLast(num){
 	$('#manySort').click();
 }
 
+function openQrScan(){
+    try{
+        javascriptService.openQrScan();
+	}catch(e){
+        alert('로또 당첨 통계 확인 어플을 설치 후 이용 가능 합니다.');
+        location.href = "intent://커스텀스킴주소#Intent; scheme=스킴; action=..;category=..; package=com.android.xxx; end;";
+	}
+}
+
+function CallKaKaoTalk(){
+    try{
+        var lottoTitle = $('#lottoTitle').text();
+        var matchYear = $('#winnerDate').html().replace(/<br>/g,"\n");
+        var winMoney = ($('#winDataArea').text()).replace(/[ /\t /\r /\n]+/,'');
+        var realNums ="";
+        for(var i = 0 ; i <= 5 ; i ++){
+            realNums += $($('#winnerNumber div')[i]).text();
+            if(i < 5) realNums += ", ";
+        }
+
+        realNums += " 보너스 : " + $($('#winnerNumber div')[7]).text();
+
+        javascriptService.CallKaKaoTalk(lottoTitle, matchYear, realNums + "\n" + winMoney);
+    }catch(e){
+        alert('로또 당첨 통계 확인 어플을 설치 후 이용 가능 합니다.');
+        location.href = "intent://커스텀스킴주소#Intent; scheme=스킴; action=..;category=..; package=com.android.xxx; end;";
+    }
+}
+
 function setWinnerInfo(winData){
     var winner = winData;
     var winDate = winner.drwNoDate;
@@ -330,32 +435,45 @@ function createBall(ballNum){
 <body>
 <div class="container">
 
-	<div class="page-header">
-		<h4 id="lottoTitle"></h4>
-		추첨일 : <span id="winnerDate"></span> <img src="refresh.png" style="vertical-align: middle;height: 20px;" onclick="refrash();"/>
-	</div>
+	<!--<div class="alert alert-danger" role="alert" id="installAlert" style="display:none;">-->
+		<!--<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+		<!--로또 당첨 통계 앱을 설치 하고 모든 기능을 사용 하세요. <a href="#" class="alert-link">설치하러 가기</a>-->
+	<!--</div>-->
 
-	<div id="winnerArea" class="panel panel-default">
-		<div class="panel-heading">
-			<button class="btn btn-info btn-sm" id="prev">이전</button> 총 판매금 : <span id="totMnt"></span>원 <button class="btn btn-info btn-sm" id="next">다음</button>
-		</div>
-		<div class="panel-body">
-			<div id="winnerNumber"></div>
-		</div>
-		<div style="clear: both;"></div>
-		<div class="panel-footer">
-			1등 : <span id="winnerMnt"></span>원 (<span id="winnerCnt"></span> 명) <img src="qr.png" style="vertical-align: middle;" onclick="openQrScan();"/>&nbsp;&nbsp;<img src="kakaolink_btn_small.png" style="vertical-align: middle;" onclick="CallKaKaoTalk();"/>
-		</div>
-	</div>
+	<!--<div class="page-header">-->
+		<!--<h4 id="lottoTitle"></h4>-->
+		<!--추첨일 : <span id="winnerDate"></span> <img src="refresh.png" style="vertical-align: middle;height: 20px;" onclick="refrash();"/>-->
+	<!--</div>-->
 
-	<div class="alert alert-info alert-dismissible" role="alert" id="noticeAlert" style="display: none">
-		<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-		<strong id="title"></strong> <span id="contents"></span>
-	</div>
+	<!--<div id="winnerArea" class="panel panel-default">-->
+		<!--<div class="panel-heading">-->
+			<!--총 판매금 : <span id="totMnt"></span>원-->
+		<!--</div>-->
+		<!--<div class="panel-body">-->
+			<!--<div id="winnerNumber"></div>-->
+		<!--</div>-->
+		<!--<div style="clear: both;"></div>-->
+		<!--<div class="panel-footer" id="winDataArea">-->
+			<!--1등 : <span id="winnerMnt"></span>원 (<span id="winnerCnt"></span> 명) <img src="qr.png" style="vertical-align: middle;" onclick="openQrScan();"/>&nbsp;&nbsp;<img src="kakaolink_btn_small.png" style="vertical-align: middle;" onclick="CallKaKaoTalk();"/>-->
+		<!--</div>-->
+	<!--</div>-->
+
+	<!--<nav aria-label="...">-->
+		<!--<ul class="pager">-->
+			<!--<li class="previous" id="prev"><a href="#"><span aria-hidden="true">&larr;</span> 이전</a></li>-->
+			<!--<li class="next" id="next"><a href="#">다음 <span aria-hidden="true">&rarr;</span></a></li>-->
+		<!--</ul>-->
+	<!--</nav>-->
+
+	<!--<div class="alert alert-info alert-dismissible" role="alert" id="noticeAlert" style="display: none">-->
+		<!--<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>-->
+		<!--<strong id="title"></strong> <span id="contents"></span>-->
+	<!--</div>-->
 
 	<ul class="nav nav-tabs">
-		<li role="presentation" class="active"><a href="#" id="tab1">번호통계</a></li>
-		<!--<li role="presentation"><a href="#" id="tab2">홀짝통계</a></li>-->
+		<li role="presentation" class="active"><a href="#" id="tab1">통계</a></li>
+		<li role="presentation"><a href="#" id="tab2">홀짝</a></li>
+		<li role="presentation"><a href="#" id="tab3"></a></li>
 		<li role="presentation"><a href="#"><label for="bonusYn">보너스 포함</label> <input type="checkbox" checked="checked" id="bonusYn"></a></li>
 	</ul>
 
@@ -401,8 +519,8 @@ function createBall(ballNum){
 				정렬<span class="caret"></span>
 		    </button>
 		    <ul class="dropdown-menu scrollable-menu">
-			  <li><a href="#" id="manySort">오름차순</a></li>
-			  <li><a href="#" id="smallSort">내림차순</a></li>
+			  <li><a href="#" id="manySort">올림</a></li>
+			  <li><a href="#" id="smallSort">내림</a></li>
 		    </ul>
 		</div>
 	</div>
@@ -475,9 +593,18 @@ function createBall(ballNum){
 	</div>
 
 	<div id="tab2Area" style="display: none;">
-		<div class="page-header">
-			<h3><span style="font-size: 24px;"></span> 홀짝 통계</h3>
-		</div>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>회차</th>
+					<th>홀수</th>
+					<th>짝수</th>
+				</tr>
+			</thead>
+			<tbody id="oddEvenTbody">
+
+			</tbody>
+		</table>
 	</div>
 </div>
 </body>
