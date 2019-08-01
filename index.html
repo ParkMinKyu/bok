@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1">
+    <meta property="og:url" content="https://parkminkyu.github.io/bok/history.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="로또 당첨 번호 및 통계 확률">
+    <meta property="og:description" content="역대 로또 당첨 번호 확인 및 번호 통계 확인">
+    <meta property="og:image" content="https://lh3.ggpht.com/C7ttGx9vouVNPdAT8ciPKtD9HRBL0JZABvLnGqkGhMtoiyOq1PMyE_OOXsdQdazqmXw">
+    <title>역대 로또 당첨 번호 및 통계 확인</title>
+    <link rel="stylesheet" href="/bok/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/bok/bootstrap/css/bootstrap-theme.min.css"/>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-51448530-11"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-51448530-11');
+    </script>
+
+    <style type="text/css">
+        *{
+            font-size : 12pt;
+        }
+
+        .scrollable-menu {
+            height: auto;
+            max-height: 300px;
+            overflow-x: hidden;
+        }
+
+        .history{
+            background-color: antiquewhite;
+        }
+
+        .ball{
+            width: 31px;
+            height: 31px;
+            text-align: center ;
+            color: #fff;
+            font-size: 16pt;
+            float: left;
+        }
+
+        .ball.red{
+            background: url(redball.png) no-repeat;
+            background-size: 31px;
+        }
+
+        .ball.yellow{
+            background: url(yellowball.png) no-repeat;
+            background-size: 31px;
+        }
+
+        .ball.wien{
+            background: url(wienball.png) no-repeat;
+            background-size: 31px;
+        }
+
+        .ball.purple{
+            background: url(purple.png) no-repeat;
+            background-size: 31px;
+        }
+
+        .ball.paran{
+            background: url(paranball.png) no-repeat;
+            background-size: 31px;
+        }
+    </style>
+    <script type="text/javascript" src="jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="/bok/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        var data = {};
+        var historyArray = new Array();
+        var sortType = 1;
+        var selectValue = 0;
+        var selectGame = 0;
+
+        $(function(){
+            $.ajax({
+                url : 'https://nieelotto.github.io/notice.json?d='+ new Date(),
+                success : function(res){
+                    if(res.isShow){
+                        $('#title').html(res.title);
+                        $('#contents').html(res.contents);
+                        $('#noticeAlert').show();
+                    }
+                }
+            });
+
+            callWinHistorys();
+
+            $('#prev, #next').click(function(){
+                if(this.id == 'prev' && selectGame > 1){
+                    selectGame -= 1;
+                }else if(this.id == 'next' && selectGame < data.length -1 ){
+                    selectGame += 1;
+                }
+                setWinnerInfo(data[selectGame]);
+            });
+
+            $('#bonusYn').click(function () {
+                switch (sortType) {
+                    case 1:
+                        getHistoryBySum();
+                        break;
+                    case 2:
+                        getHistoryByMonth(selectValue);
+                        break;
+                    case 3:
+                        getHistoryByYear(selectValue);
+                        break;
+                    case 4:
+                        getNextNumHistory(selectValue);
+                        break;
+                    case 5:
+                        getHistoryByLast(selectValue);
+                        break;
+                    default:
+                        getHistoryBySum(selectValue);
+                        break;
+                }
+                setOddEvenNumber(data);
+            });
+
+            $('#manySort').click(function(){
+                historyArray.sort(function(a,b){
+                    return parseInt(b.find('.history').text()) - parseInt(a.find('.history').text());
+                });
+
+                setHistory()
+            });
+
+            $('#smallSort').click(function(){
+                historyArray.sort(function(a,b){
+                    return parseInt(a.find('.history').text())- parseInt(b.find('.history').text());
+                });
+
+                setHistory()
+            });
+
+            $('#numSort').click(function(){
+                getHistoryBySum();
+            });
+
+            $('#lottoSimul').click(function(){
+                location.href = 'http://parkminkyu.github.io/newLotto/lottoWin.html';
+            });
+
+            /*$('#tab3').on('click',function(){
+                var filter = "win16|win32|win64|mac|macintel";
+                if(navigator.platform){
+                    if(0 > filter.indexOf(navigator.platform.toLowerCase())){
+                        location.href="market://details?id=com.min.lotto";
+                    }else{
+                        location.href="https://play.google.com/store/apps/details?id=com.min.lotto";
+                    }
+                }
+            });*/
+
+            $('#tab1,#tab2,#tab3').click(function(){
+                $('#tab1,#tab2,#tab3').parent().removeClass('active');
+                $('#tab1Area, #tab2Area, #tab3Area').hide();
+                $('#' + this.id + 'Area').show();
+                $(this).parent().addClass('active');
+            });
+
+        });
+
+        function goMarket(id){
+            var filter = "win16|win32|win64|mac|macintel";
+            if(navigator.platform){
+                if(0 > filter.indexOf(navigator.platform.toLowerCase())){
+                    location.href="market://details?id="+id;
+                }else{
+                    location.href="https://play.google.com/store/apps/details?id="+id;
+                }
+            }
+        }
+
+        function refrash(){
+            callWinHistorys();
+        }
+
+        function callWinHistorys(){
+            $.ajax({
+                url : 'lottoHistory.json?d='+ new Date(),
+                success : function(res){
+                    data = res;
+                    selectGame = data.length-1;
+                    setWinnerInfo(data[selectGame]);
+                    getHistoryBySum();
+
+                    var lastYear = new Date(data[data.length-1].drwNoDate).getFullYear();
+
+                    for(var i = lastYear ; i >= 2002 ; i --){
+                        $('#yearSelect').append('<li><a href="#" onclick="getHistoryByYear('+i+')">'+i+'년</a></li>');
+                    }
+
+                    for(var i = 1 ; i <= 45 ; i ++){
+                        $('#nextNumSelect').append('<li><a href="#" onclick="getNextNumHistory('+i+')">'+i+'번 출현시</a></li>');
+                    }
+
+                    setOddEvenNumber(data);
+                }
+            });
+        }
+
+        function setOddEvenNumber(data){
+            var html = "";
+
+            for(i = (data.length -1)  ; i >= 0 ; i --){
+                var winData = data[i];
+                var no1 = createBall(winData.drwtNo1);
+                var no2 = createBall(winData.drwtNo2);
+                var no3 = createBall(winData.drwtNo3);
+                var no4 = createBall(winData.drwtNo4);
+                var no5 = createBall(winData.drwtNo5);
+                var no6 = createBall(winData.drwtNo6);
+                var bns = createBall(winData.bnusNo);
+                html += "<tr><td>"+winData.drwNo+"</td>"
+                var odd = "<td>";
+                var even = "<td>";
+                if(isOdd(winData.drwtNo1)){
+                    odd += no1;
+                }else{
+                    even += no1;
+                }
+                if(isOdd(winData.drwtNo2)){
+                    odd += no2;
+                }else{
+                    even += no2;
+                }
+                if(isOdd(winData.drwtNo3)){
+                    odd += no3;
+                }else{
+                    even += no3;
+                }
+                if(isOdd(winData.drwtNo4)){
+                    odd += no4;
+                }else{
+                    even += no4;
+                }
+                if(isOdd(winData.drwtNo5)){
+                    odd += no5;
+                }else{
+                    even += no5;
+                }
+                if(isOdd(winData.drwtNo6)){
+                    odd += no6;
+                }else{
+                    even += no6;
+                }
+
+                if($('#bonusYn').is(':checked')){
+                    if(isOdd(winData.bnusNo)){
+                        odd += bns;
+                    }else{
+                        even += bns;
+                    }
+                }
+
+                odd +="</td>";
+                even +="</td>";
+                html += odd + even + "</tr>";
+            }
+            $('#oddEvenTbody').html(html);
+        }
+
+        function isOdd(num){
+            return num%2 == 1;
+        }
+
+        function setHistory(){
+            for(var i = 0 ; i < historyArray.length ; i ++){
+                $($('#historyArea td')[i]).html(historyArray[i].html());
+            }
+        }
+
+        function clearHistory(){
+            for(var i = 1 ; i <= 45 ; i ++){
+                $('#history'+i).text(0);
+            }
+        }
+
+        function getHistory(type, val){
+            if(type == 1){
+                for(var i = 0 ; i < data.length ; i ++){
+                    setHistoryData(data[i]);
+                }
+            }else if(type == 2){
+                for(var i = 0 ; i < data.length ; i ++){
+                    var dataMonth = new Date(data[i].drwNoDate).getMonth();
+                    if(dataMonth+1 == val){
+                        setHistoryData(data[i]);
+                    }
+                }
+            }else if(type == 3){
+                for(var i = 0 ; i < data.length ; i ++){
+                    var dataYear = new Date(data[i].drwNoDate).getFullYear();
+                    if(dataYear == val){
+                        setHistoryData(data[i]);
+                    }
+                }
+            }else if(type == 4){
+                for(var i = 0 ; i < data.length ; i ++){
+                    if(data[i].drwtNo1 == val || data[i].drwtNo2 == val || data[i].drwtNo3 == val
+                        || data[i].drwtNo4 == val || data[i].drwtNo5 == val || data[i].drwtNo6 == val
+                        || ($('#bonusYn').is(':checked') && data[i].bnusNo == val)){
+                        setHistoryData(data[i]);
+                    }
+                }
+            }
+
+            else if(type == 5){
+                for(var i = 1 ; i <= val ; i ++){
+                    setHistoryData(data[data.length - i]);
+                }
+            }
+
+            historyArray = new Array();
+
+            $('#historyArea td').each(function(){
+                historyArray.push($(this).clone());
+            });
+        }
+
+        function setHistoryData(winData){
+            $('#history'+winData.drwtNo1).text(parseInt($('#history'+winData.drwtNo1).text())+1);
+            $('#history'+winData.drwtNo2).text(parseInt($('#history'+winData.drwtNo2).text())+1);
+            $('#history'+winData.drwtNo3).text(parseInt($('#history'+winData.drwtNo3).text())+1);
+            $('#history'+winData.drwtNo4).text(parseInt($('#history'+winData.drwtNo4).text())+1);
+            $('#history'+winData.drwtNo5).text(parseInt($('#history'+winData.drwtNo5).text())+1);
+            $('#history'+winData.drwtNo6).text(parseInt($('#history'+winData.drwtNo6).text())+1);
+            if($('#bonusYn').is(':checked')){
+                $('#history'+winData.bnusNo).text(parseInt($('#history'+winData.bnusNo).text())+1);
+            }
+        }
+
+        function getHistoryBySum(){
+            sortType = 1;
+            clearHistory();
+            getHistory(sortType);
+            $('#userSelect').text("합계");
+            $('#manySort').click();
+        }
+
+        function getHistoryByMonth(month){
+            sortType = 2;
+            selectValue = month;
+            clearHistory();
+            getHistory(sortType,month);
+            $('#userSelect').text(month + "월");
+            $('#manySort').click();
+        }
+
+        function getHistoryByYear(year){
+            sortType = 3;
+            selectValue = year;
+            clearHistory();
+            getHistory(sortType,year);
+            $('#userSelect').text(year + "년");
+            $('#manySort').click();
+        }
+
+        function getNextNumHistory(num){
+            sortType = 4;
+            selectValue = num;
+            clearHistory();
+            getHistory(sortType,num);
+            $('#userSelect').text(num + " 출현시");
+            $('#manySort').click();
+        }
+
+        function getHistoryByLast(num){
+            sortType = 5;
+            selectValue = num;
+            clearHistory();
+            getHistory(sortType,num);
+            $('#userSelect').text("최근 " + num + "회");
+            $('#manySort').click();
+        }
+
+        function openQrScan(){
+            try{
+                javascriptService.openQrScan();
+            }catch(e){
+                alert('로또 어플 설치 후 이용 가능 합니다.');
+                $('#tab3').click();
+            }
+        }
+
+        function CallKaKaoTalk(){
+            try{
+                var lottoTitle = $('#lottoTitle').text();
+                var matchYear = $('#winnerDate').html().replace(/<br>/g,"\n");
+                var winMoney = ($('#winDataArea').text()).replace(/[ /\t /\r /\n]+/,'');
+                var realNums ="";
+                for(var i = 0 ; i <= 5 ; i ++){
+                    realNums += $($('#winnerNumber div')[i]).text();
+                    if(i < 5) realNums += ", ";
+                }
+
+                realNums += " 보너스 : " + $($('#winnerNumber div')[7]).text();
+
+                javascriptService.CallKaKaoTalk(lottoTitle, matchYear, realNums + "\n" + winMoney);
+            }catch(e){
+                alert('로또 어플 설치 후 이용 가능 합니다.');
+                $('#tab3').click();
+            }
+        }
+
+        function setWinnerInfo(winData){
+            var winner = winData;
+            var winDate = winner.drwNoDate;
+            $('#winnerDate').text(winDate);
+            $('#winnerNumber').html('');
+            $('#winnerNumber').append(createBall(winner.drwtNo1));
+            $('#winnerNumber').append(createBall(winner.drwtNo2));
+            $('#winnerNumber').append(createBall(winner.drwtNo3));
+            $('#winnerNumber').append(createBall(winner.drwtNo4));
+            $('#winnerNumber').append(createBall(winner.drwtNo5));
+            $('#winnerNumber').append(createBall(winner.drwtNo6));
+            $('#winnerNumber').append("<div style='float:left;font-size:18pt;'>&nbsp;&nbsp;+&nbsp;&nbsp;</div>");
+            $('#winnerNumber').append(createBall(winner.bnusNo));
+            $('#winnerMnt').text(String(winner.firstWinamnt).replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+            $('#totMnt').text(String(winner.totSellamnt).replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+            $('#winnerCnt').text(winner.firstPrzwnerCo);
+            $('#lottoTitle').text("제 " + winner.drwNo + " 회 로또 당첨 번호");
+        }
+
+        function createBall(ballNum){
+            var ball = "";
+            if(ballNum <= 10){
+                ball = "<div class='ball red' data-num='"+ballNum+"'>"+ballNum+"</div>";
+            }else if(ballNum <= 20){
+                ball = "<div class='ball paran' data-num='"+ballNum+"'>"+ballNum+"</div>";
+            }else if(ballNum <= 30){
+                ball = "<div class='ball purple' data-num='"+ballNum+"'>"+ballNum+"</div>";
+            }else if(ballNum <= 40){
+                ball = "<div class='ball wien' data-num='"+ballNum+"'>"+ballNum+"</div>";
+            }else{
+                ball = "<div class='ball yellow' data-num='"+ballNum+"'>"+ballNum+"</div>";
+            }
+            return ball;
+        }
+    </script>
+</head>
+<body>
+<div class="container">
+
+    <div class="page-header">
+        <h4 id="lottoTitle"></h4>
+        추첨일 : <span id="winnerDate"></span> <img src="refresh.png" style="vertical-align: middle;height: 20px;" onclick="refrash();"/>
+    </div>
+
+    <div id="winnerArea" class="panel panel-default">
+        <div class="panel-heading">
+            총 판매금 : <span id="totMnt"></span>원
+        </div>
+        <div class="panel-body">
+            <div id="winnerNumber"></div>
+        </div>
+        <div style="clear: both;"></div>
+        <div class="panel-footer" id="winDataArea">
+            1등 : <span id="winnerMnt"></span>원 (<span id="winnerCnt"></span> 명) <img src="qr.png" style="vertical-align: middle;" onclick="openQrScan();"/>&nbsp;&nbsp;<img src="kakaolink_btn_small.png" style="vertical-align: middle;" onclick="CallKaKaoTalk();"/>
+        </div>
+    </div>
+
+    <nav aria-label="...">
+        <ul class="pager">
+            <li class="previous" id="prev"><a href="#"><span aria-hidden="true">&larr;</span> 이전</a></li>
+            <li class="next" id="next"><a href="#">다음 <span aria-hidden="true">&rarr;</span></a></li>
+        </ul>
+    </nav>
+
+    <div class="alert alert-info alert-dismissible" role="alert" id="noticeAlert" style="display: none">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <strong id="title"></strong> <span id="contents"></span>
+    </div>
+
+    <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#" id="tab1">통계</a></li>
+        <li role="presentation"><a href="#" id="tab2">홀짝</a></li>
+        <li role="presentation"><a href="#" id="tab3">어플</a></li>
+        <li role="presentation"><a href="#"><label for="bonusYn">보너스 포함</label> <input type="checkbox" checked="checked" id="bonusYn"></a></li>
+    </ul>
+
+    <div id="tab1Area">
+        <div>
+            <h5 id="userSelect">총합계</h5>
+        </div>
+        <div class="btn-group" role="group" aria-label="...">
+            <button type="button" class="btn btn-default" id="numSort">합계</button>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="monthText" aria-haspopup="true" aria-expanded="false">최근<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu scrollable-menu">
+                    <li><a href="#" onclick="getHistoryByLast(5)">5회</a></li>
+                    <li><a href="#" onclick="getHistoryByLast(10)">10회</a></li>
+                    <li><a href="#" onclick="getHistoryByLast(15)">15회</a></li>
+                    <li><a href="#" onclick="getHistoryByLast(20)">20회</a></li>
+                    <li><a href="#" onclick="getHistoryByLast(25)">25회</a></li>
+                    <li><a href="#" onclick="getHistoryByLast(30)">30회</a></li>
+                    <li><a href="#" onclick="getHistoryByLast(35)">35회</a></li>
+                    <li><a href="#" onclick="getHistoryByLast(40)">40회</a></li>
+                </ul>
+            </div>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    연도별<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu scrollable-menu" id="yearSelect">
+
+                </ul>
+            </div>
+        </div>
+        <div class="btn-group" role="group" aria-label="...">
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    동시 출현<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu scrollable-menu" id="nextNumSelect">
+                </ul>
+            </div>
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    정렬<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu scrollable-menu">
+                    <li><a href="#" id="manySort">올림</a></li>
+                    <li><a href="#" id="smallSort">내림</a></li>
+                </ul>
+            </div>
+        </div>
+        <table class="table" id="historyArea">
+            <tr>
+                <td><div class="ball red">1</div><div style="clear: both;"></div><div class="history" id="history1">0</div></td>
+                <td><div class="ball red">2</div><div style="clear: both;"></div><div class="history" id="history2">0</div></td>
+                <td><div class="ball red">3</div><div style="clear: both;"></div><div class="history" id="history3">0</div></td>
+                <td><div class="ball red">4</div><div style="clear: both;"></div><div class="history" id="history4">0</div></td>
+                <td><div class="ball red">5</div><div style="clear: both;"></div><div class="history" id="history5">0</div></td>
+            </tr>
+            <tr>
+                <td><div class="ball red">6</div><div style="clear: both;"></div><div class="history" id="history6">0</div></td>
+                <td><div class="ball red">7</div><div style="clear: both;"></div><div class="history" id="history7">0</div></td>
+                <td><div class="ball red">8</div><div style="clear: both;"></div><div class="history" id="history8">0</div></td>
+                <td><div class="ball red">9</div><div style="clear: both;"></div><div class="history" id="history9">0</div></td>
+                <td><div class="ball red">10</div><div style="clear: both;"></div><div class="history" id="history10">0</div></td>
+            </tr>
+            <tr>
+                <td><div class="ball paran">11</div><div style="clear: both;"></div><div class="history" id="history11">0</div></td>
+                <td><div class="ball paran">12</div><div style="clear: both;"></div><div class="history" id="history12">0</div></td>
+                <td><div class="ball paran">13</div><div style="clear: both;"></div><div class="history" id="history13">0</div></td>
+                <td><div class="ball paran">14</div><div style="clear: both;"></div><div class="history" id="history14">0</div></td>
+                <td><div class="ball paran">15</div><div style="clear: both;"></div><div class="history" id="history15">0</div></td>
+            </tr>
+            <tr>
+                <td><div class="ball paran">16</div><div style="clear: both;"></div><div class="history" id="history16">0</div></td>
+                <td><div class="ball paran">17</div><div style="clear: both;"></div><div class="history" id="history17">0</div></td>
+                <td><div class="ball paran">18</div><div style="clear: both;"></div><div class="history" id="history18">0</div></td>
+                <td><div class="ball paran">19</div><div style="clear: both;"></div><div class="history" id="history19">0</div></td>
+                <td><div class="ball paran">20</div><div style="clear: both;"></div><div class="history" id="history20">0</div></td>
+            </tr>
+            <tr>
+                <td><div class="ball purple">21</div><div style="clear: both;"></div><div class="history" id="history21">0</div></td>
+                <td><div class="ball purple">22</div><div style="clear: both;"></div><div class="history" id="history22">0</div></td>
+                <td><div class="ball purple">23</div><div style="clear: both;"></div><div class="history" id="history23">0</div></td>
+                <td><div class="ball purple">24</div><div style="clear: both;"></div><div class="history" id="history24">0</div></td>
+                <td><div class="ball purple">25</div><div style="clear: both;"></div><div class="history" id="history25">0</div></td>
+            </tr>
+            <tr>
+                <td><div class="ball purple">26</div><div style="clear: both;"></div><div class="history" id="history26">0</div></td>
+                <td><div class="ball purple">27</div><div style="clear: both;"></div><div class="history" id="history27">0</div></td>
+                <td><div class="ball purple">28</div><div style="clear: both;"></div><div class="history" id="history28">0</div></td>
+                <td><div class="ball purple">29</div><div style="clear: both;"></div><div class="history" id="history29">0</div></td>
+                <td><div class="ball purple">30</div><div style="clear: both;"></div><div class="history" id="history30">0</div></td>
+            </tr>
+            <tr>
+                <td><div class="ball wien">31</div><div style="clear: both;"></div><div class="history" id="history31">0</div></td>
+                <td><div class="ball wien">32</div><div style="clear: both;"></div><div class="history" id="history32">0</div></td>
+                <td><div class="ball wien">33</div><div style="clear: both;"></div><div class="history" id="history33">0</div></td>
+                <td><div class="ball wien">34</div><div style="clear: both;"></div><div class="history" id="history34">0</div></td>
+                <td><div class="ball wien">35</div><div style="clear: both;"></div><div class="history" id="history35">0</div></td>
+            </tr>
+            <tr>
+                <td><div class="ball wien">36</div><div style="clear: both;"></div><div class="history" id="history36">0</div></td>
+                <td><div class="ball wien">37</div><div style="clear: both;"></div><div class="history" id="history37">0</div></td>
+                <td><div class="ball wien">38</div><div style="clear: both;"></div><div class="history" id="history38">0</div></td>
+                <td><div class="ball wien">39</div><div style="clear: both;"></div><div class="history" id="history39">0</div></td>
+                <td><div class="ball wien">40</div><div style="clear: both;"></div><div class="history" id="history40">0</div></td>
+            </tr>
+            <tr>
+                <td><div class="ball yellow">41</div><div style="clear: both;"></div><div class="history" id="history41">0</div></td>
+                <td><div class="ball yellow">42</div><div style="clear: both;"></div><div class="history" id="history42">0</div></td>
+                <td><div class="ball yellow">43</div><div style="clear: both;"></div><div class="history" id="history43">0</div></td>
+                <td><div class="ball yellow">44</div><div style="clear: both;"></div><div class="history" id="history44">0</div></td>
+                <td><div class="ball yellow">45</div><div style="clear: both;"></div><div class="history" id="history45">0</div></td>
+            </tr>
+        </table>
+
+    </div>
+
+    <div id="tab2Area" style="display: none;">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>회차</th>
+                <th>홀수</th>
+                <th>짝수</th>
+            </tr>
+            </thead>
+            <tbody id="oddEvenTbody">
+
+            </tbody>
+        </table>
+    </div>
+    <div id="tab3Area" style="display: none;padding-top: 10px;">
+        <div class="media">
+            <div class="media-left">
+                <a href="#">
+                    <img class="media-object" src="lotto1.png" alt="인생 역전 LOTTO">
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">인생 역전 LOTTO</h4>
+                번호 생성/저장 및 1등번호 카톡전송/ QR코드 당첨 확인 등 다양한 기능이 있는 앱<br>
+                <button class="btn btn-info btn-sm" onclick="goMarket('com.min.lotto')">바로가기</button>
+            </div>
+        </div>
+        <div class="media">
+            <div class="media-left">
+                <a href="#">
+                    <img class="media-object" src="lotto2.png" alt="LOTTO 당첨확인">
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">LOTTO 당첨확인</h4>
+                번호 생성/저장 및 QR코드 당첨 확인 기능이 있는 심플한 앱<br>
+                <button class="btn btn-info btn-sm" onclick="goMarket('com.min.newlotto')">바로가기</button>
+            </div>
+        </div>
+        <div class="media">
+            <div class="media-left">
+                <a href="#">
+                    <img class="media-object" src="lotto3.png" alt="인생한방 LOTTO">
+                </a>
+            </div>
+            <div class="media-body">
+                <h4 class="media-heading">인생한방 LOTTO</h4>
+                통계 1등번호 카톡전송/ QR코드 당첨 확인 등 다양한 기능이 있는 앱<br>
+                <button class="btn btn-info btn-sm" onclick="goMarket('kr.niee.bok')">바로가기</button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
