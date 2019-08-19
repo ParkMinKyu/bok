@@ -22,6 +22,9 @@
     </script>
 
     <style type="text/css">
+        body{
+            padding-top: 70px;
+        }
         *{
             font-size : 12pt;
         }
@@ -142,7 +145,23 @@
                 setHistory()
             });
 
-            $('#numSort').click(function(){
+            $('#numSortAsc').click(function(){
+                historyArray.sort(function(a,b){
+                    return parseInt(a.find('.ball').text())- parseInt(b.find('.ball').text());
+                });
+
+                setHistory()
+            });
+
+            $('#numSortDesc').click(function(){
+                historyArray.sort(function(a,b){
+                    return parseInt(b.find('.ball').text())- parseInt(a.find('.ball').text());
+                });
+
+                setHistory()
+            });
+
+            $('#numSum').click(function(){
                 getHistoryBySum();
             });
 
@@ -450,13 +469,31 @@
     </script>
 </head>
 <body>
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">
+                <img alt="로또정보" src="https://lh3.ggpht.com/C7ttGx9vouVNPdAT8ciPKtD9HRBL0JZABvLnGqkGhMtoiyOq1PMyE_OOXsdQdazqmXw" width="20">
+            </a>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">로또 당첨 번호 통계</a>
+        </div>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/bok/index.html">로또 통계 <span class="sr-only">(current)</span></a></li>
+                <li><a href="/newLotto/lottoWin.html">로또 시뮬레이터</a></li>
+            </ul>
+        </div><!-- /.navbar-collapse -->
+    </div><!-- /.container-fluid -->
+</nav>
 <div class="container">
-
-    <ol class="breadcrumb">
-        <li class="active"><a href="/bok/index.html">역대 로또번호/통계</a></li>
-        <li><a href="/newLotto/lottoWin.html">로또 시뮬레이터</a></li>
-    </ol>
-
     <h4 id="lottoTitle"></h4>
     추첨일 : <span id="winnerDate"></span> <img src="refresh.png" style="vertical-align: middle;height: 20px;" onclick="refrash();"/>
 
@@ -497,11 +534,11 @@
             <h5 id="userSelect">총합계</h5>
         </div>
         <div class="btn-group" role="group" aria-label="...">
-            <button type="button" class="btn btn-default" id="numSort">합계</button>
             <div class="btn-group" role="group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="monthText" aria-haspopup="true" aria-expanded="false">최근<span class="caret"></span>
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="sumText" aria-haspopup="true" aria-expanded="false">합계<span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu scrollable-menu">
+                    <li><a href="#" id="numSum">총합계</a></li>
                     <li><a href="#" onclick="getHistoryByLast(5)">5회</a></li>
                     <li><a href="#" onclick="getHistoryByLast(10)">10회</a></li>
                     <li><a href="#" onclick="getHistoryByLast(15)">15회</a></li>
@@ -512,9 +549,28 @@
                     <li><a href="#" onclick="getHistoryByLast(40)">40회</a></li>
                 </ul>
             </div>
+
+            <div class="btn-group" role="group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="monthText" aria-haspopup="true" aria-expanded="false">월별<span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu scrollable-menu">
+                    <li><a href="#" onclick="getHistoryByMonth(1)">1월</a></li>
+                    <li><a href="#" onclick="getHistoryByMonth(2)">2월</a></li>
+                    <li><a href="#" onclick="getHistoryByMonth(3)">3월</a></li>
+                    <li><a href="#" onclick="getHistoryByMonth(4)">4월</a></li>
+                    <li><a href="#" onclick="getHistoryByMonth(5)">5월</a></li>
+                    <li><a href="#" onclick="getHistoryByMonth(6)">6월</a></li>
+                    <li><a href="#" onclick="getHistoryByMonth(7)">7월</a></li>
+                    <li><a href="#" onclick="getHistoryByMonth(8)">8월</a></li>
+                    <li><a href="#" onclick="getHistoryByMonth(9)">9월</a></li>
+                    <li><a href="#" onclick="getHistoryByMonth(10)">10월</a></li>
+                    <li><a href="#" onclick="getHistoryByMonth(11)">11월</a></li>
+                    <li><a href="#" onclick="getHistoryByMonth(12)">12월</a></li>
+                </ul>
+            </div>
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    연도별<span class="caret"></span>
+                    연도<span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu scrollable-menu" id="yearSelect">
 
@@ -524,7 +580,7 @@
         <div class="btn-group" role="group" aria-label="...">
             <div class="btn-group" role="group">
                 <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    동시 출현<span class="caret"></span>
+                    동시<span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu scrollable-menu" id="nextNumSelect">
                 </ul>
@@ -536,6 +592,8 @@
                 <ul class="dropdown-menu scrollable-menu">
                     <li><a href="#" id="manySort">올림</a></li>
                     <li><a href="#" id="smallSort">내림</a></li>
+                    <li><a href="#" id="numSortAsc">번호오름</a></li>
+                    <li><a href="#" id="numSortDesc">번호내림</a></li>
                 </ul>
             </div>
         </div>
@@ -654,7 +712,7 @@
             </div>
             <div class="media-body">
                 <h4 class="media-heading">인생한방 LOTTO</h4>
-                통계 1등번호 카톡전송/ QR코드 당첨 확인 등 다양한 기능이 있는 앱<br>
+                1등번호 및 통계 카톡전송/ QR코드 당첨 확인 등 다양한 기능이 있는 앱<br>
                 <button class="btn btn-info btn-sm" onclick="goMarket('kr.niee.bok')">바로가기</button>
             </div>
         </div>
