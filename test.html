@@ -48,6 +48,8 @@
             if (signinId) {
                 setTimeout(function() {
                     signinId.focus();
+                    signinId.blur();
+                    signinId.focus();
                 }, 500); // 약간의 지연을 추가하여 키보드가 나타나도록 함
             }
         });
