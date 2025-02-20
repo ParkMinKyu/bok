@@ -57,5 +57,9 @@
 </body>
     <script>
         document.getElementById('signinId').focus()
+        setTimeout(function(){
+            document.getElementById('signinId').blur()
+            document.getElementById('signinId').focus()
+        },500)
     </script>
 </html>
