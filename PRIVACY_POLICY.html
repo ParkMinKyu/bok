@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>개인정보처리방침 — 로또 당첨 번호 확인</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Pretendard', sans-serif;
+    background: #f8fafc;
+    color: #0f172a;
+    line-height: 1.7;
+    padding: 24px 16px 80px;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; background: #fff; border-radius: 12px; padding: 36px 32px; box-shadow: 0 4px 24px rgba(0,0,0,0.05); }
+  h1 { font-size: 24px; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .meta { color: #64748b; font-size: 13px; margin-bottom: 28px; }
+  h2 { font-size: 17px; margin-top: 28px; margin-bottom: 10px; letter-spacing: -0.01em; padding-left: 10px; border-left: 3px solid #38bdf8; }
+  p, li { font-size: 14px; color: #1f2937; margin-bottom: 8px; }
+  ul { padding-left: 22px; }
+  ul li { margin-bottom: 6px; }
+  .note { background: #f1f5f9; border-radius: 8px; padding: 12px 14px; margin-top: 8px; font-size: 13px; color: #475569; }
+  a { color: #0284c7; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 13px; }
+  th, td { border: 1px solid #e2e8f0; padding: 8px 10px; text-align: left; vertical-align: top; }
+  th { background: #f8fafc; font-weight: 600; color: #475569; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>개인정보처리방침</h1>
+  <p class="meta">앱: <b>로또 당첨 번호 확인</b> (com.min.lotto) · 시행일 2026-05-04</p>
+
+  <p>본 앱(이하 "앱")은 사용자의 개인정보를 소중하게 보호하며, 「개인정보 보호법」 및 Google Play 정책을 준수합니다. 본 방침은 앱이 어떤 정보를 수집·이용·전송하는지 투명하게 안내합니다.</p>
+
+  <h2>1. 수집하지 않는 정보</h2>
+  <ul>
+    <li>이름, 전화번호, 이메일, 주소, 생년월일 등 개인을 식별할 수 있는 정보</li>
+    <li>로그인 계정 정보 (앱은 로그인 기능이 없습니다)</li>
+    <li>위치 정보, 연락처, 사진/미디어 라이브러리, 통화 기록</li>
+  </ul>
+
+  <h2>2. 사용하는 권한과 그 목적</h2>
+  <table>
+    <thead><tr><th>권한</th><th>목적</th><th>처리 방식</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>카메라<br>(android.permission.CAMERA)</td>
+        <td>종이 로또의 QR 코드 스캔으로 게임 번호와 회차를 자동 등록</td>
+        <td>스캔된 QR 데이터는 <b>기기 내에서만</b> 처리되며 외부 서버로 전송되지 않습니다.</td>
+      </tr>
+      <tr>
+        <td>인터넷<br>(android.permission.INTERNET)</td>
+        <td>당첨 번호 데이터(공개 정보) 조회, AdMob 광고 노출, 인앱 업데이트/리뷰 호출</td>
+        <td>회차 데이터는 GitHub 공개 저장소에서 가져오며 사용자 식별 정보 없이 통신합니다.</td>
+      </tr>
+      <tr>
+        <td>광고 ID<br>(com.google.android.gms.permission.AD_ID)</td>
+        <td>Google AdMob을 통한 광고 노출 및 광고 실적 측정</td>
+        <td>Google에 의해 처리되며 사용자가 기기 설정에서 언제든 재설정/삭제할 수 있습니다.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h2>3. 기기 내 저장 정보</h2>
+  <p>다음 정보는 사용자의 기기에만 저장되며, 외부로 전송되지 않습니다.</p>
+  <ul>
+    <li>사용자가 직접 등록한 "내 번호" (수동/자동/QR 스캔/시뮬레이션 등으로 생성된 번호)</li>
+    <li>QR 스캔 이력</li>
+    <li>앱 환경설정 (다크모드, 마지막 본 회차 등)</li>
+  </ul>
+  <div class="note">앱 삭제 시 위 정보는 모두 함께 제거됩니다.</div>
+
+  <h2>4. 제3자 SDK 및 외부 전송</h2>
+  <p>앱은 다음 서드파티 SDK를 사용합니다. 각 SDK는 자체 개인정보처리방침에 따라 데이터를 처리합니다.</p>
+  <ul>
+    <li><b>Google AdMob (Google Mobile Ads SDK)</b> — 광고 식별자, 기기 정보, 대략적 IP 정보를 광고 송출 및 측정 목적으로 사용. <a href="https://policies.google.com/privacy" target="_blank">Google 개인정보처리방침</a></li>
+    <li><b>Google Play Services (인앱 업데이트 / 인앱 리뷰)</b> — 업데이트 확인 및 별점 리뷰 다이얼로그 호출. <a href="https://policies.google.com/privacy" target="_blank">Google 개인정보처리방침</a></li>
+    <li><b>Firebase (선택적, 사용 시)</b> — 앱 비정상 종료(Crashlytics) 진단을 위한 익명 진단 데이터. <a href="https://firebase.google.com/support/privacy" target="_blank">Firebase 개인정보처리방침</a></li>
+    <li><b>Kakao SDK</b> — 사용자가 "카카오톡 공유" 버튼을 누른 경우에만 회차 결과 텍스트 메시지를 카카오톡으로 전달하기 위해 사용. 사용자 동의 없이 카카오 계정 정보를 수집하지 않습니다. <a href="https://www.kakao.com/policy/privacy" target="_blank">Kakao 개인정보처리방침</a></li>
+  </ul>
+
+  <h2>5. 만 13세 미만 어린이</h2>
+  <p>본 앱은 로또(복권) 정보 조회 앱으로, 만 13세 미만 어린이를 주된 대상으로 하지 않습니다. 어린이의 개인정보를 의도적으로 수집하지 않습니다.</p>
+
+  <h2>6. 광고에 관한 안내</h2>
+  <p>앱 내 일부 화면에서 Google AdMob 광고가 노출됩니다. AdMob은 사용자에게 적합한 광고를 송출하기 위해 광고 식별자를 사용할 수 있으며, 사용자는 기기 설정 &gt; Google &gt; 광고에서 광고 ID를 재설정하거나 맞춤 광고를 사용 중지할 수 있습니다.</p>
+
+  <h2>7. 데이터 보유 기간</h2>
+  <p>앱이 자체 서버에 보관하는 사용자 데이터는 없습니다. 기기 내 저장 정보는 사용자가 앱을 삭제하면 즉시 제거됩니다.</p>
+
+  <h2>8. 사용자의 권리</h2>
+  <ul>
+    <li>저장된 "내 번호" 및 QR 이력은 앱 내에서 언제든 직접 삭제할 수 있습니다.</li>
+    <li>광고 ID는 기기 설정에서 언제든 재설정 또는 삭제할 수 있습니다.</li>
+    <li>카메라 권한은 시스템 설정 &gt; 앱 &gt; 권한에서 언제든 회수할 수 있습니다.</li>
+  </ul>
+
+  <h2>9. 본 앱은 동행복권 공식 앱이 아닙니다</h2>
+  <p>본 앱은 동행복권(주)이 제공하는 공식 앱이 아닙니다. 표시되는 회차 정보는 공개된 데이터를 기반으로 하며, 정확한 당첨 결과는 반드시 동행복권 공식 사이트(<a href="https://dhlottery.co.kr" target="_blank">dhlottery.co.kr</a>)에서 확인하시기 바랍니다.</p>
+
+  <h2>10. 방침 변경</h2>
+  <p>본 방침의 내용이 변경되는 경우, 변경 사항은 본 페이지에 게시되며 시행일도 함께 갱신됩니다.</p>
+
+  <h2>11. 문의</h2>
+  <p>개인정보 처리에 관한 문의는 아래 이메일로 연락 부탁드립니다.</p>
+  <p>📧 <a href="mailto:smartmingue@gmail.com">smartmingue@gmail.com</a></p>
+
+  <p class="meta" style="margin-top:32px;border-top:1px solid #e2e8f0;padding-top:16px;">© 2026 로또 당첨 번호 확인. All rights reserved.</p>
+</div>
+</body>
+</html>
